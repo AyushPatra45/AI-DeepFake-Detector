@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from pathlib import Path
 from typing import Annotated
 from uuid import uuid4
 
 from fastapi import BackgroundTasks, FastAPI, File, HTTPException, Query, Request, UploadFile
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.adapters import ForensicAnalyzer, default_analyzers
@@ -32,6 +33,7 @@ def create_app(
     resolved_settings = settings or Settings.from_env()
     resolved_settings.create_directories()
     repository = JobRepository(resolved_settings.database_path)
+    frontend_dir = Path(__file__).resolve().parents[2] / "frontend"
 
     app = FastAPI(
         title="AI-Powered Deepfake & Steganography Forensics API",
@@ -46,10 +48,11 @@ def create_app(
         StaticFiles(directory=resolved_settings.artifact_dir),
         name="artifacts",
     )
+    app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
 
     @app.get("/", include_in_schema=False)
-    def root() -> RedirectResponse:
-        return RedirectResponse(url="/docs")
+    def root() -> FileResponse:
+        return FileResponse(frontend_dir / "index.html")
 
     @app.get("/health", response_model=HealthResponse)
     def health() -> HealthResponse:
