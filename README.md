@@ -7,11 +7,13 @@ report instead of claiming absolute proof.
 
 ## Project status
 
-**Current phase:** Review 1 / planning and literature survey
+**Current phase:** Platform foundation implementation
 
-The problem statement, objectives, scope, architecture, team ownership, requirements,
-and delivery milestones are defined. Implementation begins with the shared ingestion
-pipeline and baseline model evaluation.
+The problem statement, architecture, ownership, requirements, and milestones are
+defined. Ayush's backend foundation now provides safe upload ingestion, SHA-256
+evidence hashing, SQLite job tracking, image inspection, timestamped video sampling,
+typed analyzer adapters, and JSON/PDF report exports. The deepfake and image-forensics
+adapters remain explicitly marked as unconnected until their feature branches merge.
 
 ## Planned capabilities
 
@@ -73,6 +75,7 @@ presentations. See [Team Plan](docs/TEAM_PLAN.md) for the detailed split and han
 - [Requirements and Acceptance Criteria](docs/REQUIREMENTS.md)
 - [System Architecture](docs/ARCHITECTURE.md)
 - [Team Responsibilities](docs/TEAM_PLAN.md)
+- [Platform Foundation Hand-off](docs/PLATFORM_HANDOFF.md)
 - [Contributing and Git Workflow](CONTRIBUTING.md)
 - [Third-party Software and Attribution](THIRD_PARTY.md)
 
@@ -88,6 +91,33 @@ presentations. See [Team Plan](docs/TEAM_PLAN.md) for the detailed split and han
 The exact dependency versions will be pinned when the implementation environment is
 created. Large datasets, model checkpoints, user uploads, extracted frames, and
 generated reports are intentionally excluded from Git.
+
+## Run the backend
+
+```bash
+python3.11 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
+uvicorn app.main:app --app-dir backend --reload
+```
+
+Open `http://127.0.0.1:8000/docs` for the interactive API. Runtime uploads,
+artifacts, reports, and SQLite data are written under `runtime/` by default.
+
+Run verification with:
+
+```bash
+pytest
+ruff check backend
+```
+
+## Teammate integration contract
+
+Feature modules implement the `ForensicAnalyzer` protocol in
+`backend/app/adapters.py`. An analyzer receives an `AnalysisContext` containing the
+source path, validated media information, and sampled video frames, then returns one
+typed `ModuleResult`. This keeps model, ELA, LSB, and metadata failures isolated while
+preserving all available evidence in the final report.
 
 ## Scope statement
 
