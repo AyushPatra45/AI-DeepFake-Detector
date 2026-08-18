@@ -28,6 +28,8 @@ checkpoints/
 models/*.pt
 models/*.pth
 models/*.ckpt
+models/*.part
+models/*.onnx
 runs/
 wandb/
 

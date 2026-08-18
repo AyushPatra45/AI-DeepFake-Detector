@@ -43,13 +43,10 @@ class UnavailableAnalyzer:
 
 
 def default_analyzers() -> list[ForensicAnalyzer]:
+    from app.deepfake.adapter import DeepfakeAnalyzer
     from app.forensics.adapter import ImageForensicsAnalyzer
 
     return [
-        UnavailableAnalyzer(
-            name="deepfake_detection",
-            owner="Palak",
-            expected_capabilities="CNN/ConvNeXt, SRM/Bayar + FFT, and Grad-CAM",
-        ),
+        DeepfakeAnalyzer.from_env(),
         ImageForensicsAnalyzer(),
     ]
