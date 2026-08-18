@@ -21,10 +21,11 @@ def test_health(client: TestClient) -> None:
     assert response.json() == {"status": "ok", "version": "test-version"}
 
 
-def test_root_redirects_to_api_documentation(client: TestClient) -> None:
-    response = client.get("/", follow_redirects=False)
-    assert response.status_code == 307
-    assert response.headers["location"] == "/docs"
+def test_root_serves_forensic_workspace(client: TestClient) -> None:
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "AI-Powered Deepfake" in response.text
+    assert client.get("/static/app.js").status_code == 200
 
 
 def test_image_analysis_and_reports(client: TestClient) -> None:

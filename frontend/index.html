@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Deepfake and steganography forensic analysis workspace" />
+    <title>AI-Powered Deepfake &amp; Steganography Forensics</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="/" aria-label="Forensics workspace home">
+          <span class="brand-mark" aria-hidden="true">DF</span>
+          <span>Forensics</span>
+        </a>
+        <nav aria-label="Workspace navigation">
+          <button class="nav-item active" data-view="analysis" type="button">
+            <span aria-hidden="true">＋</span><span>New analysis</span>
+          </button>
+          <button class="nav-item" data-view="history" type="button">
+            <span aria-hidden="true">≡</span><span>Case history</span>
+          </button>
+        </nav>
+        <div class="sidebar-status">
+          <span class="status-dot" id="healthDot" aria-hidden="true"></span>
+          <span id="healthText">Checking engine</span>
+        </div>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Digital media laboratory</p>
+            <h1>AI-Powered Deepfake &amp; Steganography Forensics</h1>
+          </div>
+          <a class="icon-link" href="/docs" title="Open API documentation" aria-label="Open API documentation">API</a>
+        </header>
+
+        <section id="analysisView" class="view active" aria-labelledby="analysisHeading">
+          <div class="workspace-grid">
+            <section class="upload-panel" aria-labelledby="analysisHeading">
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">New case</p>
+                  <h2 id="analysisHeading">Analyse media</h2>
+                </div>
+                <span class="format-label">JPEG · PNG · MP4 · MOV</span>
+              </div>
+
+              <form id="uploadForm">
+                <label class="drop-zone" id="dropZone" for="mediaFile">
+                  <input id="mediaFile" name="file" type="file" accept="image/jpeg,image/png,video/mp4,video/quicktime" required />
+                  <span class="upload-symbol" aria-hidden="true">↑</span>
+                  <span class="drop-title" id="dropTitle">Choose image or video</span>
+                  <span class="drop-meta" id="dropMeta">Maximum 500 MB</span>
+                </label>
+                <button class="primary-button" id="analyseButton" type="submit" disabled>
+                  Start forensic analysis
+                </button>
+              </form>
+
+              <div class="job-progress" id="jobProgress" hidden aria-live="polite">
+                <div class="progress-copy">
+                  <span id="progressLabel">Queued</span>
+                  <span id="progressId"></span>
+                </div>
+                <div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div>
+              </div>
+            </section>
+
+            <aside class="integrity-panel" aria-label="Evidence handling">
+              <p class="eyebrow">Evidence controls</p>
+              <dl>
+                <div><dt>Identity</dt><dd>SHA-256</dd></div>
+                <div><dt>Execution</dt><dd>Local</dd></div>
+                <div><dt>Payloads</dt><dd>Inert bytes</dd></div>
+                <div><dt>Output</dt><dd>JSON · PDF</dd></div>
+              </dl>
+            </aside>
+          </div>
+
+          <section class="results" id="results" hidden aria-labelledby="resultHeading">
+            <div class="result-header">
+              <div>
+                <p class="eyebrow">Case result</p>
+                <h2 id="resultHeading">Forensic findings</h2>
+                <p class="case-file" id="caseFile"></p>
+              </div>
+              <div class="report-actions">
+                <a class="secondary-button" id="jsonReport" href="#" download>JSON</a>
+                <a class="secondary-button" id="pdfReport" href="#" download>PDF</a>
+              </div>
+            </div>
+
+            <div class="summary-strip">
+              <div class="risk-summary">
+                <span class="score-label">Deepfake probability</span>
+                <strong id="riskScore">Unavailable</strong>
+                <span class="risk-badge neutral" id="riskDecision">Not evaluated</span>
+              </div>
+              <dl class="evidence-summary">
+                <div><dt>Media</dt><dd id="mediaSummary">—</dd></div>
+                <div><dt>Frames analysed</dt><dd id="frameSummary">0</dd></div>
+                <div><dt>LSB payload</dt><dd id="lsbSummary">Not detected</dd></div>
+                <div><dt>Status</dt><dd id="statusSummary">—</dd></div>
+              </dl>
+            </div>
+
+            <div class="tab-list" role="tablist" aria-label="Forensic result views">
+              <button class="tab active" role="tab" aria-selected="true" data-tab="overview" type="button">Overview</button>
+              <button class="tab" role="tab" aria-selected="false" data-tab="artifacts" type="button">Visual evidence</button>
+              <button class="tab" role="tab" aria-selected="false" data-tab="frames" type="button">Video timeline</button>
+            </div>
+
+            <div class="tab-panel active" id="overviewPanel" role="tabpanel">
+              <div class="module-list" id="moduleList"></div>
+              <div class="warning-list" id="warningList"></div>
+            </div>
+            <div class="tab-panel" id="artifactsPanel" role="tabpanel">
+              <div class="artifact-grid" id="artifactGrid"></div>
+            </div>
+            <div class="tab-panel" id="framesPanel" role="tabpanel">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Frame</th><th>Timestamp</th><th>Deepfake probability</th><th>Evidence</th></tr></thead>
+                  <tbody id="frameTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <section id="historyView" class="view" aria-labelledby="historyHeading">
+          <div class="section-heading history-heading">
+            <div><p class="eyebrow">Saved locally</p><h2 id="historyHeading">Case history</h2></div>
+            <button class="secondary-button" id="refreshHistory" type="button">Refresh</button>
+          </div>
+          <div class="table-wrap history-table">
+            <table>
+              <thead><tr><th>File</th><th>Created</th><th>Type</th><th>Status</th><th>Case</th></tr></thead>
+              <tbody id="historyTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    <script src="/static/app.js" defer></script>
+  </body>
+</html>
