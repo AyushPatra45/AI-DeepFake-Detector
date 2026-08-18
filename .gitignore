@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# IDE and operating system
+.DS_Store
+.idea/
+.vscode/
+
+# Datasets, models and experiment output
+data/
+datasets/
+checkpoints/
+models/*.pt
+models/*.pth
+models/*.ckpt
+runs/
+wandb/
+
+# Uploaded media, temporary frames and generated reports
+uploads/
+artifacts/
+reports/
+tmp/
+temp/
+*.sqlite3
+
