@@ -11,6 +11,7 @@ from app.schemas import FrameFinding, MediaInfo, ModuleResult, ModuleStatus
 class AnalysisContext:
     job_id: str
     source_path: Path
+    artifact_dir: Path
     media: MediaInfo
     frames: list[FrameFinding]
 
@@ -42,15 +43,13 @@ class UnavailableAnalyzer:
 
 
 def default_analyzers() -> list[ForensicAnalyzer]:
+    from app.forensics.adapter import ImageForensicsAnalyzer
+
     return [
         UnavailableAnalyzer(
             name="deepfake_detection",
             owner="Palak",
             expected_capabilities="CNN/ConvNeXt, SRM/Bayar + FFT, and Grad-CAM",
         ),
-        UnavailableAnalyzer(
-            name="image_forensics",
-            owner="Ayana",
-            expected_capabilities="ELA, LSB/steganalysis, and metadata findings",
-        ),
+        ImageForensicsAnalyzer(),
     ]

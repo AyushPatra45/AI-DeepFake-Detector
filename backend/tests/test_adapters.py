@@ -13,6 +13,7 @@ def test_unavailable_adapter_returns_explicit_skipped_result(tmp_path) -> None:
     context = AnalysisContext(
         job_id="job-1",
         source_path=tmp_path / "source.png",
+        artifact_dir=tmp_path / "artifacts",
         media=MediaInfo(media_type=MediaType.PNG, width=10, height=10),
         frames=[],
     )

@@ -48,6 +48,7 @@ def process_job(
         context = AnalysisContext(
             job_id=job_id,
             source_path=source_path,
+            artifact_dir=settings.artifact_dir / job_id,
             media=inspected.info,
             frames=inspected.frames,
         )
