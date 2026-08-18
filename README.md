@@ -7,13 +7,12 @@ report instead of claiming absolute proof.
 
 ## Project status
 
-**Current phase:** Platform foundation implementation
+**Current phase:** Integrated functional prototype
 
-The problem statement, architecture, ownership, requirements, and milestones are
-defined. Ayush's backend foundation now provides safe upload ingestion, SHA-256
-evidence hashing, SQLite job tracking, image inspection, timestamped video sampling,
-typed analyzer adapters, and JSON/PDF report exports. The deepfake and image-forensics
-adapters remain explicitly marked as unconnected until their feature branches merge.
+The repository now includes the platform foundation, a dual-stream deepfake engine,
+ELA/LSB/metadata forensics, a browser interface, timestamped video sampling, evidence
+artifacts, job history, and JSON/PDF reports. Scientific dataset evaluation and
+cross-generator validation remain the next major phase.
 
 ## Planned capabilities
 
@@ -76,6 +75,7 @@ presentations. See [Team Plan](docs/TEAM_PLAN.md) for the detailed split and han
 - [System Architecture](docs/ARCHITECTURE.md)
 - [Team Responsibilities](docs/TEAM_PLAN.md)
 - [Platform Foundation Hand-off](docs/PLATFORM_HANDOFF.md)
+- [Team Implementation Status](docs/TEAM_STATUS.md)
 - [Contributing and Git Workflow](CONTRIBUTING.md)
 - [Third-party Software and Attribution](THIRD_PARTY.md)
 
@@ -98,11 +98,13 @@ generated reports are intentionally excluded from Git.
 python3.11 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e '.[dev]'
+python scripts/download_model.py
 uvicorn app.main:app --app-dir backend --reload
 ```
 
-Open `http://127.0.0.1:8000/docs` for the interactive API. Runtime uploads,
-artifacts, reports, and SQLite data are written under `runtime/` by default.
+Open `http://127.0.0.1:8000` for the forensic workspace or `/docs` for the
+interactive API. Runtime uploads, artifacts, reports, and SQLite data are written
+under `runtime/` by default.
 
 Run verification with:
 
@@ -113,11 +115,10 @@ ruff check backend
 
 ## Teammate integration contract
 
-Feature modules implement the `ForensicAnalyzer` protocol in
-`backend/app/adapters.py`. An analyzer receives an `AnalysisContext` containing the
-source path, validated media information, and sampled video frames, then returns one
-typed `ModuleResult`. This keeps model, ELA, LSB, and metadata failures isolated while
-preserving all available evidence in the final report.
+Feature modules implement the `ForensicAnalyzer` protocol in `backend/app/adapters.py`.
+The integrated implementations live under `backend/app/deepfake/` and
+`backend/app/forensics/`. Each module receives an `AnalysisContext` and returns one
+typed `ModuleResult`, keeping failures isolated while preserving available evidence.
 
 ## Scope statement
 

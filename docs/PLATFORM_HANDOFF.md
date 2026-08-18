@@ -37,27 +37,27 @@ Interactive API documentation is available at `http://127.0.0.1:8000/docs`.
 | GET | `/api/v1/analyses/{job_id}/report.json` | Download structured report |
 | GET | `/api/v1/analyses/{job_id}/report.pdf` | Download readable report |
 
-## How Palak connects the deepfake module
+## Palak deepfake integration
 
-1. Create a class with `name = "deepfake_detection"`.
-2. Implement `analyse(context: AnalysisContext) -> ModuleResult`.
-3. Read `context.source_path` for images or `context.frames` for sampled video frames.
-4. Return model version, settings, calibrated findings, warnings, and artifact paths.
-5. Register the class in `default_analyzers()` after its tests pass.
+The `deepfake_detection` adapter is connected. It loads the attributed calibrated
+checkpoint, detects and expands the largest face, runs ConvNeXt plus SRM/Bayar FFT
+inference, aggregates video scores, and generates face, residual, spectrum, and
+Grad-CAM artifacts.
 
-Frame probabilities can be added to copies of `context.frames` in a later aggregation
-adapter. Do not overwrite source files or sampled evidence frames.
+Palak's next work is scientific validation: dataset manifests, identity-disjoint
+splits, benchmark reproduction, cross-dataset testing, robustness experiments, and
+documented threshold analysis.
 
-## How Ayana connects the forensics module
+## Ayana forensics integration
 
-1. Create a class with `name = "image_forensics"`.
-2. Implement `analyse(context: AnalysisContext) -> ModuleResult`.
-3. Run ELA, LSB/steganalysis, and metadata analysis on the original source or selected
-   sampled frames as appropriate.
-4. Store generated heatmaps under the job artifact directory and return web paths as
-   `Artifact` objects.
-5. Keep ELA observations, steganography indicators, and extracted inert payload data
-   as distinct findings.
+The `image_forensics` adapter is connected. It generates ELA with measured statistics,
+inspects RGB LSB distributions, safely extracts supported marker/length/signature
+payloads as inert bytes, and normalises image/video metadata. The frontend presents
+these independently from the deepfake probability.
+
+Ayana's next work is validation and usability: test a wider controlled steganography
+corpus, document false positives, verify evidence wording with users, and refine the
+result views from feedback.
 
 ## Result rules
 
@@ -71,6 +71,7 @@ adapter. Do not overwrite source files or sampled evidence frames.
 
 ## Current expected result
 
-Until both adapters merge, valid uploads finish as `partially_completed`. This is
-intentional and visible in reports; the platform does not fabricate model or forensic
-results.
+With the calibrated checkpoint installed and a detectable face present, supported
+images and videos can finish as `completed`. Missing weights, no-face media, or an
+unsupported module condition produces `partially_completed` with an explicit warning;
+the platform never fabricates a result.
