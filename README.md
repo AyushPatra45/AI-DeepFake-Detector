@@ -76,6 +76,7 @@ presentations. See [Team Plan](docs/TEAM_PLAN.md) for the detailed split and han
 - [Team Responsibilities](docs/TEAM_PLAN.md)
 - [Platform Foundation Hand-off](docs/PLATFORM_HANDOFF.md)
 - [Team Implementation Status](docs/TEAM_STATUS.md)
+- [Palak Baseline Evaluation](evaluation/README.md)
 - [Contributing and Git Workflow](CONTRIBUTING.md)
 - [Third-party Software and Attribution](THIRD_PARTY.md)
 

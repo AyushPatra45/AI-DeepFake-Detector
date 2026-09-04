@@ -1,0 +1,3 @@
+path,label,identity_ids,source_group,manipulation
+real/video001/frame0001.jpg,real,person001,video001,original
+fake/video101/frame0001.jpg,fake,person001;person019,video101,Deepfakes
