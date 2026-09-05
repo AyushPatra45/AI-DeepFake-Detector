@@ -12,7 +12,9 @@
 7. Obtain review from at least one teammate and pass automated checks before merging.
 8. Delete the merged branch and select the next planned task.
 
-Do not commit directly to `main` after the planning baseline is established.
+Do not commit implementation directly to `main` after the planning baseline is
+established. A coordination-only task claim in `docs/TEAM_WORKBOARD.md` is the sole
+exception when the repository permits it.
 Do not edit files owned by another active workboard row without agreeing on a hand-off.
 
 ## Pull-request expectations

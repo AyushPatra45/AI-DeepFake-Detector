@@ -50,11 +50,12 @@ actual work and Git history.
 1. Run `git switch main`, `git pull --ff-only origin main`, and `git fetch --prune`.
 2. Read this file and choose one `READY` task assigned to you.
 3. Confirm that nobody owns the same files or area in an active row.
-4. Create the recorded branch. Never implement directly on `main`.
-5. Change the row to `CLAIMED`, add your exact branch and intended files, and push that
-   small claim first. Ask Ayush to merge the claim before substantial editing.
-6. Change the row to `IN_PROGRESS` in your implementation branch after the claim is on
-   `main`.
+4. Change the row to `CLAIMED` and add your intended implementation branch and files.
+   Land this coordination-only edit on `main` through the GitHub editor or a tiny claim
+   pull request before writing implementation code.
+5. Pull the claimed row from `main`, then create the implementation branch recorded in
+   the row. Never implement directly on `main`.
+6. Change the row to `IN_PROGRESS` in the implementation branch when work begins.
 7. Before editing a shared file such as `README.md`, `pyproject.toml`, API schemas, or
    report formats, record it in the row and notify the other owners.
 8. Commit in small units and push at least at the end of each work session.
