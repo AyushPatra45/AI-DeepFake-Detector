@@ -35,15 +35,15 @@ mapping or a documented team annotation.
 From the repository root:
 
 ```bash
-python -m evaluation.prepare_dataset \
+python -m evaluation.deepfake.prepare_dataset \
   --source-root /path/to/extracted_faces \
   --metadata /path/to/approved_metadata.csv \
   --dataset "FaceForensics++" \
-  --output evaluation/manifests/catalog.csv
+  --output evaluation/deepfake/manifests/catalog.csv
 
-python -m evaluation.create_splits \
-  --catalog evaluation/manifests/catalog.csv \
-  --output-dir evaluation/manifests/splits \
+python -m evaluation.deepfake.create_splits \
+  --catalog evaluation/deepfake/manifests/catalog.csv \
+  --output-dir evaluation/deepfake/manifests/splits \
   --seed 2205
 ```
 
@@ -61,11 +61,11 @@ card.
 Install the project and checkpoint as described in the root README, then run:
 
 ```bash
-python -m evaluation.evaluate \
-  --manifest evaluation/manifests/splits/test.csv \
+python -m evaluation.deepfake.evaluate \
+  --manifest evaluation/deepfake/manifests/splits/test.csv \
   --data-root /path/to/extracted_faces \
   --checkpoint models/dual_stream_calibrated.pth \
-  --output-dir evaluation/results/baseline
+  --output-dir evaluation/deepfake/results/baseline
 ```
 
 Outputs:
@@ -89,4 +89,3 @@ samples without disclosure would bias the result.
 - [ ] Checkpoint and manifest SHA-256 hashes appear in `metrics.json`.
 - [ ] Coverage, class balance, per-manipulation results, and failure cases reported.
 - [ ] Results are described as a published-checkpoint baseline, not team-trained accuracy.
-

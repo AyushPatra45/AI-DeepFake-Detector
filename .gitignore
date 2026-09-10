@@ -32,9 +32,9 @@ models/*.part
 models/*.onnx
 runs/
 wandb/
-evaluation/manifests/*.csv
-evaluation/manifests/splits/
-evaluation/results/
+evaluation/deepfake/manifests/*.csv
+evaluation/deepfake/manifests/splits/
+evaluation/deepfake/results/
 
 # Uploaded media, temporary frames and generated reports
 uploads/

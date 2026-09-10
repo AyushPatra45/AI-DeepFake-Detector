@@ -4,7 +4,7 @@ import argparse
 from collections import Counter
 from pathlib import Path
 
-from evaluation.catalog import build_catalog, write_catalog
+from evaluation.deepfake.catalog import build_catalog, write_catalog
 
 
 def main() -> None:
@@ -15,7 +15,7 @@ def main() -> None:
     parser.add_argument("--metadata", required=True, type=Path)
     parser.add_argument("--dataset", required=True)
     parser.add_argument(
-        "--output", type=Path, default=Path("evaluation/manifests/catalog.csv")
+        "--output", type=Path, default=Path("evaluation/deepfake/manifests/catalog.csv")
     )
     args = parser.parse_args()
 
@@ -34,4 +34,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

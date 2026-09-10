@@ -4,8 +4,8 @@ import argparse
 import json
 from pathlib import Path
 
-from evaluation.catalog import read_catalog
-from evaluation.splitting import split_catalog, write_splits
+from evaluation.deepfake.catalog import read_catalog
+from evaluation.deepfake.splitting import split_catalog, write_splits
 
 
 def main() -> None:
@@ -13,10 +13,10 @@ def main() -> None:
         description="Create deterministic identity/source-disjoint dataset manifests"
     )
     parser.add_argument(
-        "--catalog", type=Path, default=Path("evaluation/manifests/catalog.csv")
+        "--catalog", type=Path, default=Path("evaluation/deepfake/manifests/catalog.csv")
     )
     parser.add_argument(
-        "--output-dir", type=Path, default=Path("evaluation/manifests/splits")
+        "--output-dir", type=Path, default=Path("evaluation/deepfake/manifests/splits")
     )
     parser.add_argument("--train-ratio", type=float, default=0.70)
     parser.add_argument("--validation-ratio", type=float, default=0.15)
@@ -35,4 +35,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

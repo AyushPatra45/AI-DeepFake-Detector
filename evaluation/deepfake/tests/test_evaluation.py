@@ -5,9 +5,9 @@ from pathlib import Path
 
 import pytest
 
-from evaluation.catalog import CatalogRecord, build_catalog, write_catalog
-from evaluation.metrics import binary_metrics, roc_auc
-from evaluation.splitting import audit_split_integrity, split_catalog
+from evaluation.deepfake.catalog import CatalogRecord, build_catalog, write_catalog
+from evaluation.deepfake.metrics import binary_metrics, roc_auc
+from evaluation.deepfake.splitting import audit_split_integrity, split_catalog
 
 
 def _record(

@@ -28,11 +28,6 @@ claiming them as completed individual contributions.
 
 ## Palak: required next work
 
-Update, 4 September 2026: the reproducible catalog, identity/source-disjoint splitting,
-baseline metric, provenance-reporting, and leakage-test tooling is implemented under
-`evaluation/`. Execution on an approved dataset and publication of measured results
-remain pending; no accuracy claim has been added.
-
 1. Read and explain `backend/app/deepfake/` and the reference architecture.
 2. Reproduce baseline metrics on an approved, identity-disjoint dataset subset.
 3. Evaluate at least one manipulation family or dataset excluded from training.

@@ -38,4 +38,3 @@
 
 State whether derived manifests and aggregate metrics may be published. Do not commit
 restricted media, identifying annotations, or dataset URLs containing access tokens.
-

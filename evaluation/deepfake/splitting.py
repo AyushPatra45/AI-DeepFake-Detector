@@ -7,7 +7,7 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 
-from evaluation.catalog import CATALOG_FIELDS, CatalogRecord
+from evaluation.deepfake.catalog import CATALOG_FIELDS, CatalogRecord
 
 SPLITS = ("train", "validation", "test")
 

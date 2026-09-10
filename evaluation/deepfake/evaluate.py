@@ -12,8 +12,8 @@ import cv2
 from app.deepfake.face import FaceCropper
 from app.deepfake.runtime import ModelRuntime, load_runtime
 
-from evaluation.catalog import CatalogRecord, read_catalog, sha256_file
-from evaluation.metrics import binary_metrics
+from evaluation.deepfake.catalog import CatalogRecord, read_catalog, sha256_file
+from evaluation.deepfake.metrics import binary_metrics
 
 PREDICTION_FIELDS = (
     "sample_id",
@@ -197,7 +197,9 @@ def main() -> None:
     parser.add_argument(
         "--checkpoint", type=Path, default=Path("models/dual_stream_calibrated.pth")
     )
-    parser.add_argument("--output-dir", type=Path, default=Path("evaluation/results/baseline"))
+    parser.add_argument(
+        "--output-dir", type=Path, default=Path("evaluation/deepfake/results/baseline")
+    )
     parser.add_argument("--image-size", type=int, default=512)
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--threshold", type=float)
