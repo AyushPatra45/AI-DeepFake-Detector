@@ -6,7 +6,9 @@ milestones; this file prevents two members from editing the same area at the sam
 
 Last remote audit: 11 September 2026 by Ayush. Palak's evaluation pipeline was reviewed
 and merged through [PR #3](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/3).
-No Ayana-authored branch or commit had been found at the time of Ayush's audit.
+Ayush's retention and resource-limit work was reviewed and merged through
+[PR #4](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/4). No Ayana-authored
+branch or commit had been found at the time of Ayush's audit.
 
 ## Status values
 
@@ -21,7 +23,6 @@ No Ayana-authored branch or commit had been found at the time of Ayush's audit.
 
 | ID | Task | Owner | Status | Branch | Owned files or area | Updated | PR / evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| A-02 | Add retention cleanup and configurable analysis limits | Ayush | IN_PROGRESS | `codex/ayush-retention-limits` | `backend/app/config.py`, media limits, storage/retention cleanup, API integration, related tests and deployment documentation | 2026-09-11 | Claimed by Ayush |
 | P-02 | Add deepfake failure and batch-inference tests | Palak | READY | Suggested after P-01: `palak/deepfake-edge-tests` | `backend/tests/test_deepfake.py`; coordinate before changing `backend/app/deepfake/` | 2026-09-05 | Not started |
 | P-03 | Run the baseline on an approved fixed dataset subset | Palak | BLOCKED | Create after dataset approval | Generated private manifests/results and reviewed aggregate results in `docs/MODEL_EVALUATION.md` | 2026-09-11 | Needs an approved dataset subset; no accuracy is claimed |
 | P-04 | Add evaluator runner and failure-path tests | Palak | CLAIMED | `codex/palak-evaluator-integration-tests` | `evaluation/deepfake/tests/test_evaluator_integration.py`; cover `evaluate_manifest`, output files, no-face/read errors and invalid thresholds | 2026-09-11 | Claimed by Palak after P-01 merge; implementation not started |
@@ -39,6 +40,7 @@ Only one large task per person may be `CLAIMED` or `IN_PROGRESS` at a time.
 | Platform backend foundation | Ayush | Ayush | MERGED | PR #1, commit `49b0b5f` |
 | Shared workboard and collision rules | Shared | Ayush | MERGED | Commits `81aa4d0` and `0f34555` |
 | Reproducible deepfake baseline evaluation pipeline | Palak | Palak | MERGED | PR #3; commit `9c285c5` and follow-up commits; 30 tests and Ruff passed |
+| Retention cleanup and configurable analysis limits | Ayush | Ayush | MERGED | PR #4; commit `218db76`; 45 tests, Ruff and diff checks passed |
 | ELA, LSB and metadata integration | Ayana domain | Ayush with Codex assistance | MERGED | PR #2, commit `d027194`; Ayana must still review and validate it |
 | Dual-stream detector integration | Palak domain | Ayush with Codex assistance | MERGED | PR #2, commit `04119ab`; Palak must still review and validate it |
 | Browser forensic workspace | Ayana domain | Ayush with Codex assistance | MERGED | PR #2, commit `49cba6d`; Ayana must still review and validate it |
@@ -74,6 +76,7 @@ Add a short entry only when useful; keep the newest entry first.
 
 | Date | Member | Task | Done | Next | Blocker |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-11 | Ayush | A-02 | Merged [PR #4](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/4) with startup/periodic retention cleanup, path-safe deletion, decoded-media limits and operations documentation; 45 tests and Ruff passed | Integrate validated team evaluation outputs when available | Palak's approved dataset run and Ayana's validation results are still pending |
 | 2026-09-11 | Palak | P-04 | Claimed evaluator integration and failure-path tests on `codex/palak-evaluator-integration-tests` | Add isolated runner, output, batching, read-error, no-face and invalid-input coverage | None |
 | 2026-09-11 | Ayush | P-01 review | Reviewed and merged PR #3 after 30 tests, Ruff and an independent evaluator smoke test passed | Add direct evaluator failure-path coverage; run real metrics after dataset approval | Approved dataset subset not supplied |
 | 2026-09-11 | Palak | P-01 | Pushed the evaluation branch and opened [PR #3](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/3); 30 tests and Ruff passed | Ayush reviews P-01; run the documented baseline after an approved dataset subset is supplied | Approved dataset subset not supplied; no accuracy is claimed |

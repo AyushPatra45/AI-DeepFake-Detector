@@ -1,6 +1,6 @@
 # Team Implementation Status
 
-Status date: 19 August 2026
+Status date: 11 September 2026
 
 ## Authorship note
 
@@ -23,6 +23,7 @@ claiming them as completed individual contributions.
 | LSB indicators and supported extraction | Ayana | Implemented for review | Controlled hidden-payload test passed |
 | Image/video metadata | Ayana | Implemented for review | Basic image and integrated API tests passed |
 | Browser results workspace | Ayana | Implemented for review | Desktop/mobile and end-to-end browser tested |
+| Retention cleanup and configurable media limits | Ayush | Complete and merged | Startup/periodic cleanup and limit tests passed |
 | Cross-dataset scientific evaluation | Palak | Not started | Required before final review |
 | Extended stego validation and user study | Ayana | Not started | Required before final review |
 
@@ -51,20 +52,21 @@ Loading a published checkpoint is implementation evidence, not a new accuracy cl
    evidence, history, and report download.
 7. Improve accessibility and wording from the observed user errors.
 
-## Ayush: next integration work
+## Ayush: integration status
 
-1. Review and merge the combined engines/UI pull request after checks pass.
-2. Add retention cleanup and configurable analysis limits for deployment.
-3. Add a background worker if concurrent long-video jobs are required.
-4. Integrate Palak's evaluation outputs and Ayana's user-study results into reports.
-5. Package a reproducible demonstration corpus without restricted dataset media.
+Completed: the combined engines/UI integration and deployment-oriented retention,
+cleanup, and configurable media limits are merged.
+
+1. Add a background worker only if concurrent long-video jobs become a requirement.
+2. Integrate Palak's evaluation outputs and Ayana's user-study results when supplied.
+3. Package a reproducible demonstration corpus without restricted dataset media.
 
 ## Verified evidence
 
 - Published checkpoint SHA-256:
   `c5c2002b5ef6c7ee0c542d7d203e16386dc641b685859d8a58ac883b52c8e4c9`.
 - Checkpoint calibration loaded: threshold `0.01`, temperature `1.4788347482681274`.
-- Automated suite: 25 tests passing before final documentation update.
+- Automated suite: 45 tests passing after PR #4 retention and limit integration.
 - Browser workflow: upload, processing, completed result, case history, five visual
   artifacts, and report links verified without console errors.
 - Responsive check: no horizontal document overflow at a 390-pixel viewport.
