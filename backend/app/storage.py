@@ -4,6 +4,7 @@ import json
 import sqlite3
 from collections.abc import Iterator
 from contextlib import contextmanager
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -16,6 +17,12 @@ def _utc_iso() -> str:
 
 class JobNotFoundError(LookupError):
     pass
+
+
+@dataclass(frozen=True)
+class StoredJob:
+    id: str
+    source_path: Path
 
 
 class JobRepository:
@@ -121,6 +128,31 @@ class JobRepository:
                 "SELECT * FROM analysis_jobs ORDER BY created_at DESC LIMIT ?", (limit,)
             ).fetchall()
         return [self._to_view(row) for row in rows]
+
+    def expired_before(self, cutoff: datetime) -> list[StoredJob]:
+        if cutoff.tzinfo is None:
+            raise ValueError("Retention cutoff must be timezone-aware")
+        with self._connection() as connection:
+            rows = connection.execute(
+                """
+                SELECT id, source_path
+                FROM analysis_jobs
+                WHERE updated_at < ? AND status NOT IN (?, ?)
+                ORDER BY updated_at ASC
+                """,
+                (
+                    cutoff.astimezone(UTC).isoformat(),
+                    JobStatus.QUEUED,
+                    JobStatus.PROCESSING,
+                ),
+            ).fetchall()
+        return [StoredJob(id=row["id"], source_path=Path(row["source_path"])) for row in rows]
+
+    def delete(self, job_id: str) -> None:
+        with self._connection() as connection:
+            cursor = connection.execute("DELETE FROM analysis_jobs WHERE id = ?", (job_id,))
+            if cursor.rowcount == 0:
+                raise JobNotFoundError(job_id)
 
     def set_status(self, job_id: str, status: JobStatus) -> None:
         self._update(job_id, status=status)

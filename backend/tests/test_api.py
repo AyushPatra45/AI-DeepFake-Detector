@@ -1,10 +1,16 @@
 from __future__ import annotations
 
 import hashlib
+import sqlite3
+from contextlib import closing
+from datetime import UTC, datetime, timedelta
 from io import BytesIO
+from pathlib import Path
 
 from app.config import Settings
 from app.main import create_app
+from app.schemas import JobStatus, MediaType
+from app.storage import JobRepository
 from fastapi.testclient import TestClient
 from PIL import Image
 
@@ -93,3 +99,36 @@ def test_lists_jobs_and_returns_not_found(client: TestClient) -> None:
     assert listing.status_code == 200
     assert len(listing.json()["jobs"]) == 1
     assert client.get("/api/v1/analyses/missing").status_code == 404
+
+
+def test_application_startup_cleans_expired_jobs(tmp_path: Path) -> None:
+    settings = Settings(
+        data_dir=tmp_path / "runtime",
+        retention_hours=1,
+        cleanup_interval_seconds=60,
+    )
+    settings.create_directories()
+    repository = JobRepository(settings.database_path)
+    source = settings.upload_dir / "expired.png"
+    source.write_bytes(png_bytes())
+    repository.create(
+        job_id="expired",
+        source_name="expired.png",
+        source_path=source,
+        media_type=MediaType.PNG,
+        sha256="b" * 64,
+        size_bytes=source.stat().st_size,
+    )
+    repository.set_status("expired", JobStatus.FAILED)
+    expired_at = (datetime.now(UTC) - timedelta(hours=2)).isoformat()
+    with closing(sqlite3.connect(settings.database_path)) as connection:
+        connection.execute(
+            "UPDATE analysis_jobs SET created_at = ?, updated_at = ? WHERE id = ?",
+            (expired_at, expired_at, "expired"),
+        )
+        connection.commit()
+
+    with TestClient(create_app(settings)) as cleanup_client:
+        assert cleanup_client.get("/api/v1/analyses/expired").status_code == 404
+
+    assert not source.exists()
