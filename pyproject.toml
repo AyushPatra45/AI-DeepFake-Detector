@@ -33,7 +33,7 @@ where = ["backend"]
 [tool.pytest.ini_options]
 addopts = "-q"
 pythonpath = ["backend"]
-testpaths = ["backend/tests"]
+testpaths = ["backend/tests", "evaluation/deepfake/tests"]
 
 [tool.ruff]
 line-length = 100

@@ -77,6 +77,7 @@ presentations. See [Team Plan](docs/TEAM_PLAN.md) for the detailed split and han
 - [Live Team Workboard](docs/TEAM_WORKBOARD.md)
 - [Platform Foundation Hand-off](docs/PLATFORM_HANDOFF.md)
 - [Team Implementation Status](docs/TEAM_STATUS.md)
+- [Palak Baseline Evaluation](docs/MODEL_EVALUATION.md)
 - [Contributing and Git Workflow](CONTRIBUTING.md)
 - [Third-party Software and Attribution](THIRD_PARTY.md)
 
