@@ -74,6 +74,7 @@ presentations. See [Team Plan](docs/TEAM_PLAN.md) for the detailed split and han
 - [Requirements and Acceptance Criteria](docs/REQUIREMENTS.md)
 - [System Architecture](docs/ARCHITECTURE.md)
 - [Team Responsibilities](docs/TEAM_PLAN.md)
+- [Live Team Workboard](docs/TEAM_WORKBOARD.md)
 - [Platform Foundation Hand-off](docs/PLATFORM_HANDOFF.md)
 - [Team Implementation Status](docs/TEAM_STATUS.md)
 - [Palak Baseline Evaluation](evaluation/README.md)

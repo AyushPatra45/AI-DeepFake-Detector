@@ -2,15 +2,20 @@
 
 ## Git workflow
 
-1. Pull the latest `main` before starting work.
-2. Create a short-lived branch such as `feature/video-sampling`,
+1. Read and claim one task in `docs/TEAM_WORKBOARD.md` before editing project files.
+2. Pull the latest `main` before starting work.
+3. Create the branch recorded in the workboard, such as `feature/video-sampling`,
    `feature/deepfake-baseline`, `feature/ela`, or `fix/upload-validation`.
-3. Keep commits focused and use messages such as `feat: add uniform frame sampler`.
-4. Push the branch and open a pull request using the repository template.
-5. Obtain review from at least one teammate and pass automated checks before merging.
-6. Delete the merged branch and select the next planned task.
+4. Keep commits focused and use messages such as `feat: add uniform frame sampler`.
+5. Push the branch and open a pull request using the repository template.
+6. Update the workboard row with the current status and pull-request link.
+7. Obtain review from at least one teammate and pass automated checks before merging.
+8. Delete the merged branch and select the next planned task.
 
-Do not commit directly to `main` after the planning baseline is established.
+Do not commit implementation directly to `main` after the planning baseline is
+established. A coordination-only task claim in `docs/TEAM_WORKBOARD.md` is the sole
+exception when the repository permits it.
+Do not edit files owned by another active workboard row without agreeing on a hand-off.
 
 ## Pull-request expectations
 
@@ -45,4 +50,3 @@ Do not commit directly to `main` after the planning baseline is established.
 - Return structured errors instead of silently skipping failures.
 - Never execute extracted payloads or load untrusted pickled objects.
 - Add comments only where the reason for an implementation is not obvious.
-
