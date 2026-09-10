@@ -4,9 +4,9 @@ This is the single source of truth for active project work. Update this file bef
 starting a task and again when its state changes. `TEAM_STATUS.md` records broader
 milestones; this file prevents two members from editing the same area at the same time.
 
-Last remote audit: 11 September 2026 by Ayush. GitHub contained no Palak- or
-Ayana-authored branches or commits at that time. Palak reported local commit `9c285c5`,
-which is not shared until its branch is pushed.
+Last remote audit: 11 September 2026 by Ayush. Palak's P-01 branch is now pushed and
+reviewable in [PR #3](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/3).
+No Ayana-authored branch or commit had been found at the time of Ayush's audit.
 
 ## Status values
 
@@ -22,7 +22,7 @@ which is not shared until its branch is pushed.
 | ID | Task | Owner | Status | Branch | Owned files or area | Updated | PR / evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | A-02 | Add retention cleanup and configurable analysis limits | Unassigned | READY | Suggested: `ayush/retention-limits` | `backend/app/config.py`, ingestion/storage cleanup, related tests | 2026-09-05 | Not started |
-| P-01 | Reproduce the deepfake baseline on a fixed dataset subset | Palak | IN_PROGRESS | `codex/palak-dataset-evaluation` | `evaluation/`, `.gitignore`, `README.md`, `docs/TEAM_STATUS.md`, `pyproject.toml`; no production deepfake files reported | 2026-09-11 | Local commit `9c285c5`; push pending |
+| P-01 | Reproduce the deepfake baseline on a fixed dataset subset | Palak | PR_OPEN | `codex/palak-dataset-evaluation` | `evaluation/deepfake/`, `docs/MODEL_EVALUATION.md`, `.gitignore`, `README.md`, `pyproject.toml`; no production deepfake files modified | 2026-09-11 | [PR #3](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/3); 30 tests passed; Ruff passed; dataset-dependent metrics remain unvalidated |
 | P-02 | Add deepfake failure and batch-inference tests | Palak | READY | Suggested after P-01: `palak/deepfake-edge-tests` | `backend/tests/test_deepfake.py`; coordinate before changing `backend/app/deepfake/` | 2026-09-05 | Not started |
 | Y-01 | Build a controlled clean and LSB-embedded image corpus | Ayana | READY | Suggested: `ayana/stego-validation` | New `evaluation/steganography/`, fixtures, and `docs/FORENSICS_EVALUATION.md` | 2026-09-05 | Not started |
 | Y-02 | Evaluate ELA cases and document false positives | Ayana | READY | Suggested after Y-01: `ayana/ela-validation` | Evaluation assets/scripts and `docs/FORENSICS_EVALUATION.md`; coordinate before production ELA edits | 2026-09-05 | Not started |
@@ -72,7 +72,7 @@ Add a short entry only when useful; keep the newest entry first.
 
 | Date | Member | Task | Done | Next | Blocker |
 | --- | --- | --- | --- | --- | --- |
-| 2026-09-11 | Palak | P-01 | Created local baseline-pipeline commit `9c285c5` | Merge current `origin/main`, verify, push the existing branch, and open a pull request | Branch is not yet on GitHub |
+| 2026-09-11 | Palak | P-01 | Pushed the evaluation branch and opened [PR #3](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/3); 30 tests and Ruff passed | Ayush reviews P-01; run the documented baseline after an approved dataset subset is supplied | Approved dataset subset not supplied; no accuracy is claimed |
 | 2026-09-11 | Ayush | A-01 | Merged the workboard into `origin/main` | Palak and Ayana can claim their first validation tasks | None |
 | 2026-09-05 | Ayush | A-01 | Audited remote branches and created coordination rules | Open and merge the workboard pull request | None |
 
