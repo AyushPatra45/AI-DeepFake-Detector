@@ -4,9 +4,9 @@ This is the single source of truth for active project work. Update this file bef
 starting a task and again when its state changes. `TEAM_STATUS.md` records broader
 milestones; this file prevents two members from editing the same area at the same time.
 
-Last remote audit: 5 September 2026 by Ayush. GitHub contained no Palak- or
-Ayana-authored branches or commits at that time. Work that exists only on a member's
-computer is not counted as shared until it is committed and pushed.
+Last remote audit: 11 September 2026 by Ayush. GitHub contained no Palak- or
+Ayana-authored branches or commits at that time. Palak reported local commit `9c285c5`,
+which is not shared until its branch is pushed.
 
 ## Status values
 
@@ -21,7 +21,6 @@ computer is not counted as shared until it is committed and pushed.
 
 | ID | Task | Owner | Status | Branch | Owned files or area | Updated | PR / evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| A-01 | Introduce the shared workboard and collision rules | Ayush | IN_PROGRESS | `codex/team-coordination-board` | `docs/TEAM_WORKBOARD.md`, `CONTRIBUTING.md`, README documentation links | 2026-09-05 | Pending |
 | A-02 | Add retention cleanup and configurable analysis limits | Unassigned | READY | Suggested: `ayush/retention-limits` | `backend/app/config.py`, ingestion/storage cleanup, related tests | 2026-09-05 | Not started |
 | P-01 | Reproduce the deepfake baseline on a fixed dataset subset | Palak | READY | Suggested: `palak/deepfake-evaluation` | New `evaluation/deepfake/` files and `docs/MODEL_EVALUATION.md`; avoid production model edits initially | 2026-09-05 | Not started |
 | P-02 | Add deepfake failure and batch-inference tests | Palak | READY | Suggested after P-01: `palak/deepfake-edge-tests` | `backend/tests/test_deepfake.py`; coordinate before changing `backend/app/deepfake/` | 2026-09-05 | Not started |
@@ -37,6 +36,7 @@ Only one large task per person may be `CLAIMED` or `IN_PROGRESS` at a time.
 | --- | --- | --- | --- | --- |
 | Project roadmap and team plan | Shared | Ayush | MERGED | Commit `c85722c` |
 | Platform backend foundation | Ayush | Ayush | MERGED | PR #1, commit `49b0b5f` |
+| Shared workboard and collision rules | Shared | Ayush | MERGED | Commits `81aa4d0` and `0f34555` |
 | ELA, LSB and metadata integration | Ayana domain | Ayush with Codex assistance | MERGED | PR #2, commit `d027194`; Ayana must still review and validate it |
 | Dual-stream detector integration | Palak domain | Ayush with Codex assistance | MERGED | PR #2, commit `04119ab`; Palak must still review and validate it |
 | Browser forensic workspace | Ayana domain | Ayush with Codex assistance | MERGED | PR #2, commit `49cba6d`; Ayana must still review and validate it |
@@ -72,6 +72,7 @@ Add a short entry only when useful; keep the newest entry first.
 
 | Date | Member | Task | Done | Next | Blocker |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-11 | Ayush | A-01 | Merged the workboard into `origin/main` | Palak and Ayana can claim their first validation tasks | None |
 | 2026-09-05 | Ayush | A-01 | Audited remote branches and created coordination rules | Open and merge the workboard pull request | None |
 
 ## Handoff checklist
