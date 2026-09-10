@@ -21,7 +21,7 @@ No Ayana-authored branch or commit had been found at the time of Ayush's audit.
 
 | ID | Task | Owner | Status | Branch | Owned files or area | Updated | PR / evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| A-02 | Add retention cleanup and configurable analysis limits | Unassigned | READY | Suggested: `ayush/retention-limits` | `backend/app/config.py`, ingestion/storage cleanup, related tests | 2026-09-05 | Not started |
+| A-02 | Add retention cleanup and configurable analysis limits | Ayush | IN_PROGRESS | `codex/ayush-retention-limits` | `backend/app/config.py`, media limits, storage/retention cleanup, API integration, related tests and deployment documentation | 2026-09-11 | Claimed by Ayush |
 | P-02 | Add deepfake failure and batch-inference tests | Palak | READY | Suggested after P-01: `palak/deepfake-edge-tests` | `backend/tests/test_deepfake.py`; coordinate before changing `backend/app/deepfake/` | 2026-09-05 | Not started |
 | P-03 | Run the baseline on an approved fixed dataset subset | Palak | BLOCKED | Create after dataset approval | Generated private manifests/results and reviewed aggregate results in `docs/MODEL_EVALUATION.md` | 2026-09-11 | Needs an approved dataset subset; no accuracy is claimed |
 | P-04 | Add evaluator runner and failure-path tests | Palak | READY | Suggested: `palak/evaluator-integration-tests` | `evaluation/deepfake/tests/`; cover `evaluate_manifest`, output files, no-face/read errors and invalid thresholds | 2026-09-11 | Component tests pass; independent evaluator smoke test passed during PR review |
