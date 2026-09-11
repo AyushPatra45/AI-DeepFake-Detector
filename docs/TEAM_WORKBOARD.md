@@ -13,6 +13,8 @@ integration tests were reviewed and merged through
 [PR #5](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/5), and her deepfake
 failure and batch-inference tests were reviewed and merged through
 [PR #6](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/6).
+Ayush's reproducible synthetic demonstration corpus and repository CI were reviewed
+and merged through [PR #8](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/8).
 
 ## Status values
 
@@ -27,7 +29,6 @@ failure and batch-inference tests were reviewed and merged through
 
 | ID | Task | Owner | Status | Branch | Owned files or area | Updated | PR / evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| A-03 | Package a reproducible synthetic demonstration corpus and add repository CI | Ayush | IN_PROGRESS | `codex/ayush-demo-ci` | New `scripts/create_demo_corpus.py`, `backend/tests/test_demo_corpus.py`, `docs/DEMO_CORPUS.md`, `.github/workflows/ci.yml`, plus coordinated `README.md`, `.gitignore`, `pyproject.toml`, and status-document updates | 2026-09-12 | Generator, tests, documentation, and CI are being implemented; no restricted media will be committed |
 | P-03 | Run the baseline on an approved fixed dataset subset | Palak | BLOCKED | Create after dataset approval | Generated private manifests/results and reviewed aggregate results in `docs/MODEL_EVALUATION.md` | 2026-09-11 | Needs an approved dataset subset; no accuracy is claimed |
 | Y-01 | Build a controlled clean and LSB-embedded image corpus | Ayana | READY | Suggested: `ayana/stego-validation` | New `evaluation/steganography/`, fixtures, and `docs/FORENSICS_EVALUATION.md` | 2026-09-05 | Not started |
 | Y-02 | Evaluate ELA cases and document false positives | Ayana | READY | Suggested after Y-01: `ayana/ela-validation` | Evaluation assets/scripts and `docs/FORENSICS_EVALUATION.md`; coordinate before production ELA edits | 2026-09-05 | Not started |
@@ -46,6 +47,7 @@ Only one large task per person may be `CLAIMED` or `IN_PROGRESS` at a time.
 | Evaluator runner and failure-path tests | Palak | Palak, with Ayush review fix | MERGED | PR #5; Palak commit `e65ffbf`; review fix `6357a19`; 55 tests and Ruff passed |
 | Deepfake failure and batch-inference tests | Palak | Palak | MERGED | PR #6; commit `61ca8a9`; 11 deepfake, 45 backend and 60 total tests passed; Ruff passed |
 | Retention cleanup and configurable analysis limits | Ayush | Ayush | MERGED | PR #4; commit `218db76`; 45 tests, Ruff and diff checks passed |
+| Reproducible synthetic demonstration corpus and repository CI | Ayush | Ayush | MERGED | PR #8; merge commit `7bb1c93`; 63 tests, Ruff and GitHub Actions passed |
 | ELA, LSB and metadata integration | Ayana domain | Ayush with Codex assistance | MERGED | PR #2, commit `d027194`; Ayana must still review and validate it |
 | Dual-stream detector integration | Palak domain | Ayush with Codex assistance | MERGED | PR #2, commit `04119ab`; Palak must still review and validate it |
 | Browser forensic workspace | Ayana domain | Ayush with Codex assistance | MERGED | PR #2, commit `49cba6d`; Ayana must still review and validate it |
@@ -81,6 +83,7 @@ Add a short entry only when useful; keep the newest entry first.
 
 | Date | Member | Task | Done | Next | Blocker |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-12 | Ayush | A-03 | Merged [PR #8](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/8) with a deterministic six-image ELA/LSB demonstration corpus, manifest checksums, regression tests, documentation and repository CI; 63 local tests, Ruff and GitHub Actions passed | Review Ayana's Y-01 PR and integrate approved P-03 results when available | P-03 still requires formal FaceForensics++ access approval |
 | 2026-09-12 | Ayush | A-03 | Claimed the synthetic demonstration corpus and CI task on `codex/ayush-demo-ci` | Implement deterministic media generation, automated forensic checks, documentation, and CI | None |
 | 2026-09-12 | Ayush | P-02 review | Reviewed and merged [PR #6](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/6); verified checkpoint failure, empty input, batching, unreadable image and video frame-association coverage; 60 tests and Ruff passed | Keep P-03 blocked until an approved fixed dataset subset is supplied | Approved dataset subset not supplied |
 | 2026-09-12 | Palak | P-02 | Added five deterministic deepfake failure and batch-inference tests and opened [PR #6](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/6); 11 deepfake, 45 backend and 60 total tests passed; Ruff passed; no production code or data artifacts changed | Ayush reviews and merges P-02; keep P-03 blocked until an approved fixed dataset subset is supplied | P-03 still needs an approved dataset subset; no accuracy is claimed |

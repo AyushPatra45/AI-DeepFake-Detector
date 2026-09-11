@@ -26,6 +26,7 @@ claiming them as completed individual contributions.
 | Retention cleanup and configurable media limits | Ayush | Complete and merged | Startup/periodic cleanup and limit tests passed |
 | Evaluator runner and failure handling | Palak | Complete and merged | Batching, outputs, invalid input, read-error and no-face tests passed |
 | Deepfake runtime edge and batch paths | Palak | Complete and merged | Empty input, malformed checkpoint, unreadable image, batching and frame association tested |
+| Synthetic ELA/LSB demonstration corpus and repository CI | Ayush | Complete and merged | Reproducibility, checksums, extraction controls, heatmaps and GitHub Actions verified |
 | Cross-dataset scientific evaluation | Palak | Not started | Required before final review |
 | Extended stego validation and user study | Ayana | Not started | Required before final review |
 
@@ -56,19 +57,19 @@ Loading a published checkpoint is implementation evidence, not a new accuracy cl
 
 ## Ayush: integration status
 
-Completed: the combined engines/UI integration and deployment-oriented retention,
-cleanup, and configurable media limits are merged.
+Completed: the combined engines/UI integration, deployment-oriented retention,
+cleanup, configurable media limits, reproducible demonstration corpus, and repository
+CI are merged.
 
 1. Add a background worker only if concurrent long-video jobs become a requirement.
 2. Integrate Palak's evaluation outputs and Ayana's user-study results when supplied.
-3. Package a reproducible demonstration corpus without restricted dataset media.
 
 ## Verified evidence
 
 - Published checkpoint SHA-256:
   `c5c2002b5ef6c7ee0c542d7d203e16386dc641b685859d8a58ac883b52c8e4c9`.
 - Checkpoint calibration loaded: threshold `0.01`, temperature `1.4788347482681274`.
-- Automated suite: 60 tests passing after PR #6 deepfake edge-test integration.
+- Automated suite: 63 tests passing after PR #8 demonstration-corpus and CI integration.
 - Browser workflow: upload, processing, completed result, case history, five visual
   artifacts, and report links verified without console errors.
 - Responsive check: no horizontal document overflow at a 390-pixel viewport.
