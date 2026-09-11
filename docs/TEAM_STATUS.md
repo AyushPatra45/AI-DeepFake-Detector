@@ -25,6 +25,7 @@ claiming them as completed individual contributions.
 | Browser results workspace | Ayana | Implemented for review | Desktop/mobile and end-to-end browser tested |
 | Retention cleanup and configurable media limits | Ayush | Complete and merged | Startup/periodic cleanup and limit tests passed |
 | Evaluator runner and failure handling | Palak | Complete and merged | Batching, outputs, invalid input, read-error and no-face tests passed |
+| Deepfake runtime edge and batch paths | Palak | Complete and merged | Empty input, malformed checkpoint, unreadable image, batching and frame association tested |
 | Cross-dataset scientific evaluation | Palak | Not started | Required before final review |
 | Extended stego validation and user study | Ayana | Not started | Required before final review |
 
@@ -36,7 +37,7 @@ claiming them as completed individual contributions.
 4. Measure JPEG, resize, blur, and noise robustness using fixed test manifests.
 5. Compare mean, top-k, and softmax-weighted video aggregation.
 6. Write the model methodology, metrics table, confusion matrix, and limitations.
-7. Add tests for no-face, multiple-face, corrupt checkpoint, and batch inference cases.
+7. Add multiple-face and truncated-checkpoint cases if dataset runs expose gaps.
 
 Palak's module is not scientifically complete until these results are reproducible.
 Loading a published checkpoint is implementation evidence, not a new accuracy claim.
@@ -67,7 +68,7 @@ cleanup, and configurable media limits are merged.
 - Published checkpoint SHA-256:
   `c5c2002b5ef6c7ee0c542d7d203e16386dc641b685859d8a58ac883b52c8e4c9`.
 - Checkpoint calibration loaded: threshold `0.01`, temperature `1.4788347482681274`.
-- Automated suite: 55 tests passing after PR #5 evaluator test integration.
+- Automated suite: 60 tests passing after PR #6 deepfake edge-test integration.
 - Browser workflow: upload, processing, completed result, case history, five visual
   artifacts, and report links verified without console errors.
 - Responsive check: no horizontal document overflow at a 390-pixel viewport.
