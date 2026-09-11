@@ -13,6 +13,10 @@ class MediaDecodeError(RuntimeError):
     pass
 
 
+class MediaLimitError(ValueError):
+    pass
+
+
 @dataclass(frozen=True)
 class InspectedMedia:
     info: MediaInfo
@@ -20,9 +24,22 @@ class InspectedMedia:
     warnings: list[str]
 
 
-def inspect_image(path: Path, media_type: MediaType) -> InspectedMedia:
+def _check_pixel_limit(width: int, height: int, max_pixels: int | None) -> None:
+    if max_pixels is not None and width * height > max_pixels:
+        raise MediaLimitError(
+            f"Media dimensions exceed the configured limit of {max_pixels} pixels"
+        )
+
+
+def inspect_image(
+    path: Path,
+    media_type: MediaType,
+    *,
+    max_pixels: int | None = None,
+) -> InspectedMedia:
     try:
         with Image.open(path) as image:
+            _check_pixel_limit(image.width, image.height, max_pixels)
             image.verify()
         with Image.open(path) as image:
             width, height = image.size
@@ -43,6 +60,8 @@ def sample_video(
     output_dir: Path,
     interval_seconds: float,
     max_frames: int,
+    max_pixels: int | None = None,
+    max_duration_seconds: float | None = None,
 ) -> InspectedMedia:
     if interval_seconds <= 0:
         raise ValueError("Frame interval must be greater than zero")
@@ -62,6 +81,12 @@ def sample_video(
             raise MediaDecodeError("Video metadata is incomplete or invalid")
 
         duration = total_frames / fps
+        _check_pixel_limit(width, height, max_pixels)
+        if max_duration_seconds is not None and duration > max_duration_seconds:
+            raise MediaLimitError(
+                "Video duration exceeds the configured limit of "
+                f"{max_duration_seconds:g} seconds"
+            )
         output_dir.mkdir(parents=True, exist_ok=True)
         samples: list[FrameFinding] = []
         timestamp = 0.0
@@ -122,6 +147,8 @@ def inspect_media(
     output_dir: Path,
     interval_seconds: float,
     max_frames: int,
+    max_pixels: int | None = None,
+    max_video_duration_seconds: float | None = None,
 ) -> InspectedMedia:
     if media_type.is_video:
         return sample_video(
@@ -130,5 +157,7 @@ def inspect_media(
             output_dir=output_dir,
             interval_seconds=interval_seconds,
             max_frames=max_frames,
+            max_pixels=max_pixels,
+            max_duration_seconds=max_video_duration_seconds,
         )
-    return inspect_image(path, media_type)
+    return inspect_image(path, media_type, max_pixels=max_pixels)

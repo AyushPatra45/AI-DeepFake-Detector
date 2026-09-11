@@ -26,6 +26,8 @@ def process_job(
             output_dir=settings.artifact_dir / job_id,
             interval_seconds=settings.frame_interval_seconds,
             max_frames=settings.max_sampled_frames,
+            max_pixels=settings.max_media_pixels,
+            max_video_duration_seconds=settings.max_video_duration_seconds,
         )
         media_duration_ms = round((perf_counter() - started) * 1000)
 
@@ -37,6 +39,8 @@ def process_job(
                 settings={
                     "frame_interval_seconds": settings.frame_interval_seconds,
                     "max_sampled_frames": settings.max_sampled_frames,
+                    "max_media_pixels": settings.max_media_pixels,
+                    "max_video_duration_seconds": settings.max_video_duration_seconds,
                 },
                 findings={
                     "sha256_verified": True,

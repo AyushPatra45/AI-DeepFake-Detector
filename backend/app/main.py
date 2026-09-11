@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import asyncio
 from collections.abc import Sequence
+from contextlib import asynccontextmanager, suppress
 from pathlib import Path
 from typing import Annotated
 from uuid import uuid4
@@ -14,6 +16,7 @@ from app.config import Settings
 from app.ingestion import InvalidMediaError, UploadTooLargeError, save_upload
 from app.orchestrator import process_job
 from app.reporting import write_json_report, write_pdf_report
+from app.retention import RetentionManager
 from app.schemas import HealthResponse, JobList, JobView
 from app.storage import JobNotFoundError, JobRepository
 
@@ -33,15 +36,35 @@ def create_app(
     resolved_settings = settings or Settings.from_env()
     resolved_settings.create_directories()
     repository = JobRepository(resolved_settings.database_path)
+    retention_manager = RetentionManager(repository, resolved_settings)
     frontend_dir = Path(__file__).resolve().parents[2] / "frontend"
+
+    @asynccontextmanager
+    async def lifespan(_: FastAPI):
+        await asyncio.to_thread(retention_manager.run_if_due, force=True)
+
+        async def cleanup_loop() -> None:
+            while True:
+                await asyncio.sleep(resolved_settings.cleanup_interval_seconds)
+                await asyncio.to_thread(retention_manager.run_if_due, force=True)
+
+        cleanup_task = asyncio.create_task(cleanup_loop())
+        try:
+            yield
+        finally:
+            cleanup_task.cancel()
+            with suppress(asyncio.CancelledError):
+                await cleanup_task
 
     app = FastAPI(
         title="AI-Powered Deepfake & Steganography Forensics API",
         version="0.1.0",
         description="Evidence-oriented image and video forensic analysis API",
+        lifespan=lifespan,
     )
     app.state.settings = resolved_settings
     app.state.repository = repository
+    app.state.retention_manager = retention_manager
     app.state.analyzers = list(analyzers) if analyzers is not None else default_analyzers()
     app.mount(
         "/artifacts",
