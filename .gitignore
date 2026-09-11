@@ -35,6 +35,7 @@ wandb/
 evaluation/deepfake/manifests/*.csv
 evaluation/deepfake/manifests/splits/
 evaluation/deepfake/results/
+demo/generated/
 
 # Uploaded media, temporary frames and generated reports
 uploads/
