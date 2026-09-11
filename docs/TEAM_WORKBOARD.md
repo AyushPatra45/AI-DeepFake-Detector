@@ -25,7 +25,7 @@ integration tests were reviewed and merged through
 
 | ID | Task | Owner | Status | Branch | Owned files or area | Updated | PR / evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| P-02 | Add deepfake failure and batch-inference tests | Palak | READY | Suggested after P-01: `palak/deepfake-edge-tests` | `backend/tests/test_deepfake.py`; coordinate before changing `backend/app/deepfake/` | 2026-09-05 | Not started |
+| P-02 | Add deepfake failure and batch-inference tests | Palak | CLAIMED | `codex/palak-deepfake-edge-tests` | `backend/tests/test_deepfake.py`; no production deepfake files planned | 2026-09-12 | Claimed after P-04 merged; implementation not started |
 | P-03 | Run the baseline on an approved fixed dataset subset | Palak | BLOCKED | Create after dataset approval | Generated private manifests/results and reviewed aggregate results in `docs/MODEL_EVALUATION.md` | 2026-09-11 | Needs an approved dataset subset; no accuracy is claimed |
 | Y-01 | Build a controlled clean and LSB-embedded image corpus | Ayana | READY | Suggested: `ayana/stego-validation` | New `evaluation/steganography/`, fixtures, and `docs/FORENSICS_EVALUATION.md` | 2026-09-05 | Not started |
 | Y-02 | Evaluate ELA cases and document false positives | Ayana | READY | Suggested after Y-01: `ayana/ela-validation` | Evaluation assets/scripts and `docs/FORENSICS_EVALUATION.md`; coordinate before production ELA edits | 2026-09-05 | Not started |
@@ -78,6 +78,7 @@ Add a short entry only when useful; keep the newest entry first.
 
 | Date | Member | Task | Done | Next | Blocker |
 | --- | --- | --- | --- | --- | --- |
+| 2026-09-12 | Palak | P-02 | Claimed deepfake failure and batch-inference tests on `codex/palak-deepfake-edge-tests`; implementation scope is `backend/tests/test_deepfake.py` only | Land this coordination claim on `main`, then implement and verify the edge-case tests | None |
 | 2026-09-12 | Ayush | P-04 review | Reviewed and merged [PR #5](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/5); retained A-02 updates and fixed cross-platform absolute-path validation after a new test exposed the issue; 55 tests and Ruff passed | Palak may claim P-02 after updating from `main` | P-03 still needs an approved dataset subset |
 | 2026-09-11 | Palak | P-04 | Added 10 evaluator runner and failure-path tests; opened [PR #5](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/5); 40 total tests and Ruff passed | Ayush reviews and merges P-04 before Palak claims P-02 | P-03 still needs an approved dataset subset |
 | 2026-09-11 | Ayush | A-02 | Merged [PR #4](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/4) with startup/periodic retention cleanup, path-safe deletion, decoded-media limits and operations documentation; 45 tests and Ruff passed | Integrate validated team evaluation outputs when available | Palak's approved dataset run and Ayana's validation results are still pending |
