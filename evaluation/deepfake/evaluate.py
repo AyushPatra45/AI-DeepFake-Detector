@@ -6,7 +6,7 @@ import importlib.metadata
 import json
 import platform
 import subprocess
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 
 import cv2
 from app.deepfake.face import FaceCropper
@@ -47,7 +47,11 @@ def _package_version(name: str) -> str:
 
 def _safe_media_path(data_root: Path, relative_value: str) -> Path:
     relative_path = Path(relative_value)
-    if relative_path.is_absolute():
+    if (
+        relative_path.is_absolute()
+        or PurePosixPath(relative_value).is_absolute()
+        or bool(PureWindowsPath(relative_value).anchor)
+    ):
         raise ValueError(f"Manifest path must be relative: {relative_value!r}")
     data_root = data_root.resolve()
     media_path = (data_root / relative_path).resolve()
