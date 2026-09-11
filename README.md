@@ -79,6 +79,7 @@ presentations. See [Team Plan](docs/TEAM_PLAN.md) for the detailed split and han
 - [Team Implementation Status](docs/TEAM_STATUS.md)
 - [Palak Baseline Evaluation](docs/MODEL_EVALUATION.md)
 - [Operations, Limits and Retention](docs/OPERATIONS.md)
+- [Synthetic Demonstration Corpus](docs/DEMO_CORPUS.md)
 - [Contributing and Git Workflow](CONTRIBUTING.md)
 - [Third-party Software and Attribution](THIRD_PARTY.md)
 
@@ -113,7 +114,13 @@ Run verification with:
 
 ```bash
 pytest
-ruff check backend
+ruff check backend evaluation scripts
+```
+
+Create the licence-safe ELA and LSB demonstration media with:
+
+```bash
+python scripts/create_demo_corpus.py
 ```
 
 ## Teammate integration contract
