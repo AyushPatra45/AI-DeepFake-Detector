@@ -1,6 +1,6 @@
 # Team Implementation Status
 
-Status date: 18 September 2026
+Status date: 19 September 2026
 
 ## Authorship note
 
@@ -30,7 +30,7 @@ claiming them as completed individual contributions.
 | Cross-dataset scientific evaluation | Palak | Not started | Required before final review |
 | Deterministic stego validation | Ayana | Complete and merged | Five supported extractions, six clean controls and five unsupported layouts evaluated |
 | Controlled ELA validation | Ayana | Complete and merged | Ten cases reproduced; benign highlight conditions and failed edit localisation documented |
-| Interface accessibility and user study | Ayana | Not started | Required before final review |
+| Interface accessibility and user study | Ayana | In progress | Keyboard/accessibility fixes merged; five-person study pending |
 
 ## Palak: required next work
 
@@ -54,8 +54,9 @@ unsupported keyed/channel layouts were measured and documented with explicit lim
 1. Pull merged `main`, read and explain `backend/app/forensics/` and `frontend/`.
 2. Y-02 is complete: ten controlled ELA cases and false-positive conditions are
    documented in `docs/FORENSICS_EVALUATION.md`.
-3. Claim Y-03 after pulling updated `main`.
-4. Run a five-person usability test covering upload, result interpretation, visual
+3. Y-03 accessibility audit and keyboard corrections are merged; review and explain
+   the changes recorded in `docs/USABILITY_EVALUATION.md`.
+4. Run the planned five-person usability test covering upload, result interpretation, visual
    evidence, history, and report download.
 5. Improve accessibility and wording from the observed user errors.
 
@@ -83,6 +84,9 @@ CI are merged.
 - Browser workflow: upload, processing, completed result, case history, five visual
   artifacts, and report links verified without console errors.
 - Responsive check: no horizontal document overflow at a 390-pixel viewport.
+- Y-03 accessibility progress: view focus, result focus, result-tab arrow navigation,
+  visible focus treatment, accessible navigation state, and table headers were verified;
+  76 automated tests passed. Participant usability results are not yet available.
 
 ## Review wording
 
