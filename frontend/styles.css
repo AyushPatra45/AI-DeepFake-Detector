@@ -17,6 +17,31 @@
 
 * { box-sizing: border-box; }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 10;
+  top: 10px;
+  left: 10px;
+  transform: translateY(-160%);
+  border-radius: 4px;
+  padding: 10px 14px;
+  background: var(--nav);
+  color: #fff;
+  font-weight: 700;
+}
+
+.skip-link:focus { transform: translateY(0); }
+
 body {
   margin: 0;
   background: var(--soft);
@@ -222,6 +247,7 @@ h3 { margin-bottom: 5px; font-size: 15px; }
 .risk-badge.neutral { background: #e8ecee; color: #4f5d65; }
 .risk-badge.lower_risk { background: #e2f2e9; color: var(--green); }
 .risk-badge.suspicious { background: #fae6e3; color: var(--red); }
+.risk-help { margin: 4px 0 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
 
 .evidence-summary { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .evidence-summary div { min-width: 0; padding: 20px 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -267,6 +293,15 @@ td a { color: var(--cyan-dark); font-weight: 700; }
 .case-button { border: 0; padding: 0; background: transparent; color: var(--cyan-dark); cursor: pointer; font-weight: 750; }
 
 .toast { position: fixed; right: 22px; bottom: 22px; max-width: min(380px, calc(100vw - 44px)); border-radius: 5px; padding: 13px 16px; background: #27343a; color: white; box-shadow: var(--shadow); font-size: 12px; }
+
+[hidden] { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 
 @media (max-width: 920px) {
   .app-shell { grid-template-columns: 76px minmax(0, 1fr); }

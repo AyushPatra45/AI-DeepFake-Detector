@@ -1,4 +1,13 @@
-const state = { currentJob: null, pollTimer: null };
+const state = { currentJob: null, pollTimer: null, toastTimer: null };
+
+const MAX_UPLOAD_BYTES = 500 * 1024 * 1024;
+const SUPPORTED_MEDIA_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "video/mp4",
+  "video/quicktime",
+]);
+const SUPPORTED_EXTENSIONS = new Set(["jpg", "jpeg", "png", "mp4", "mov"]);
 
 const byId = (id) => document.getElementById(id);
 const formatPercent = (value) => `${(Number(value) * 100).toFixed(1)}%`;
@@ -20,31 +29,67 @@ async function api(path, options = {}) {
 
 function showToast(message) {
   const toast = byId("toast");
+  window.clearTimeout(state.toastTimer);
   toast.textContent = message;
   toast.hidden = false;
-  window.setTimeout(() => { toast.hidden = true; }, 4500);
+  state.toastTimer = window.setTimeout(() => { toast.hidden = true; }, 4500);
 }
 
-function selectFile(file) {
+function resetFileSelection() {
   const input = byId("mediaFile");
-  if (file) {
+  input.value = "";
+  byId("dropTitle").textContent = "Choose image or video";
+  byId("dropMeta").textContent = "Maximum 500 MB";
+  byId("analyseButton").disabled = true;
+}
+
+function validateFile(file) {
+  if (!file) return "Choose a file before starting analysis.";
+  const extension = file.name.includes(".") ? file.name.split(".").pop().toLowerCase() : "";
+  if (!SUPPORTED_MEDIA_TYPES.has(file.type) && !SUPPORTED_EXTENSIONS.has(extension)) {
+    return "Unsupported format. Choose a JPEG, PNG, MP4, or MOV file.";
+  }
+  if (file.size > MAX_UPLOAD_BYTES) return "File is larger than the 500 MB limit.";
+  return null;
+}
+
+function selectFile(file, assignToInput = false) {
+  const input = byId("mediaFile");
+  const validationError = validateFile(file);
+  if (validationError) {
+    resetFileSelection();
+    showToast(validationError);
+    input.focus();
+    return false;
+  }
+  if (assignToInput) {
     const transfer = new DataTransfer();
     transfer.items.add(file);
     input.files = transfer.files;
-    byId("dropTitle").textContent = file.name;
-    byId("dropMeta").textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
-    byId("analyseButton").disabled = false;
   }
+  byId("dropTitle").textContent = file.name;
+  byId("dropMeta").textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+  byId("analyseButton").disabled = false;
+  return true;
+}
+
+function setAnalysisBusy(busy) {
+  const form = byId("uploadForm");
+  const button = byId("analyseButton");
+  form.setAttribute("aria-busy", String(busy));
+  button.disabled = busy || !byId("mediaFile").files.length;
+  button.textContent = busy ? "Analysing media" : "Start forensic analysis";
 }
 
 async function submitAnalysis(event) {
   event.preventDefault();
   const file = byId("mediaFile").files[0];
-  if (!file) return;
+  if (!selectFile(file)) return;
 
   const form = new FormData();
   form.append("file", file);
-  byId("analyseButton").disabled = true;
+  setAnalysisBusy(true);
+  resetResult();
   byId("results").hidden = true;
   setProgress("Uploading", "", 12);
   try {
@@ -55,7 +100,7 @@ async function submitAnalysis(event) {
   } catch (error) {
     setProgress("Upload failed", "", 100);
     showToast(error.message);
-    byId("analyseButton").disabled = false;
+    setAnalysisBusy(false);
   }
 }
 
@@ -65,6 +110,8 @@ function setProgress(label, id, percent) {
   byId("progressLabel").textContent = label;
   byId("progressId").textContent = id ? id.slice(0, 8) : "";
   byId("progressBar").style.width = `${percent}%`;
+  byId("progressTrack").setAttribute("aria-valuenow", String(percent));
+  byId("progressTrack").setAttribute("aria-valuetext", label);
 }
 
 async function pollJob(jobId) {
@@ -74,19 +121,39 @@ async function pollJob(jobId) {
     const progress = { queued: 30, processing: 68, partially_completed: 100, completed: 100, failed: 100 };
     setProgress(job.status.replaceAll("_", " "), job.id, progress[job.status] || 50);
     if (["completed", "partially_completed", "failed"].includes(job.status)) {
-      byId("analyseButton").disabled = false;
+      setAnalysisBusy(false);
       renderResult(job);
       loadHistory();
       return;
     }
     state.pollTimer = window.setTimeout(() => pollJob(jobId), 900);
   } catch (error) {
+    setProgress("Analysis status unavailable", jobId, 100);
     showToast(error.message);
-    byId("analyseButton").disabled = false;
+    setAnalysisBusy(false);
   }
 }
 
+function resetResult() {
+  byId("caseFile").textContent = "";
+  byId("riskScore").textContent = "Unavailable";
+  byId("riskDecision").textContent = "Not evaluated";
+  byId("riskDecision").className = "risk-badge neutral";
+  byId("riskHelp").textContent = "A model risk indicator, not proof that media is authentic or manipulated.";
+  byId("mediaSummary").textContent = "—";
+  byId("frameSummary").textContent = "0";
+  byId("lsbSummary").textContent = "Not detected";
+  byId("statusSummary").textContent = "—";
+  byId("moduleList").replaceChildren();
+  byId("warningList").replaceChildren();
+  byId("artifactGrid").replaceChildren();
+  byId("frameTable").replaceChildren();
+  byId("reportActions").hidden = true;
+  activateTab(byId("overviewTab"));
+}
+
 function renderResult(job) {
+  resetResult();
   const result = job.result;
   byId("results").hidden = false;
   byId("caseFile").textContent = `${job.source_name} · SHA-256 ${job.sha256}`;
@@ -96,9 +163,12 @@ function renderResult(job) {
 
   if (!result) {
     byId("warningList").innerHTML = `<div class="warning">${escapeText(job.error || "Analysis failed")}</div>`;
+    byId("riskHelp").textContent = "No model result was produced. Review the failure message and try a supported file.";
     byId("resultHeading").focus();
     return;
   }
+
+  byId("reportActions").hidden = false;
 
   const deepfake = result.modules.find((module) => module.module === "deepfake_detection");
   const forensics = result.modules.find((module) => module.module === "image_forensics");
@@ -108,8 +178,13 @@ function renderResult(job) {
   const riskBadge = byId("riskDecision");
   riskBadge.textContent = decision ? decision.replaceAll("_", " ") : "Not evaluated";
   riskBadge.className = `risk-badge ${decision || "neutral"}`;
+  byId("riskHelp").textContent = probability == null
+    ? "The face-focused model was not evaluated. Other forensic findings may still be available."
+    : "This calibrated model score is a risk indicator, not proof that media is authentic or manipulated.";
   byId("frameSummary").textContent = deepfake?.findings?.analysed_faces ?? result.frames.length;
-  byId("lsbSummary").textContent = forensics?.findings?.lsb?.supported_payload_detected ? "Extracted safely" : "Not detected";
+  byId("lsbSummary").textContent = forensics?.findings?.lsb?.supported_payload_detected
+    ? "Extracted safely"
+    : "Not detected";
   const media = result.media;
   byId("mediaSummary").textContent = media.duration_seconds == null
     ? `${media.width} × ${media.height}`
@@ -190,9 +265,10 @@ function renderFrames(frames) {
 }
 
 async function loadHistory() {
+  const table = byId("historyTable");
+  table.setAttribute("aria-busy", "true");
   try {
     const payload = await api("/api/v1/analyses?limit=100");
-    const table = byId("historyTable");
     table.replaceChildren();
     if (!payload.jobs.length) {
       table.innerHTML = '<tr><td class="empty-cell" colspan="5">No analysis cases.</td></tr>';
@@ -200,11 +276,14 @@ async function loadHistory() {
     }
     payload.jobs.forEach((job) => {
       const row = document.createElement("tr");
-      row.innerHTML = `<td>${escapeText(job.source_name)}</td><td>${new Date(job.created_at).toLocaleString()}</td><td>${escapeText(job.media_type)}</td><td>${escapeText(job.status.replaceAll("_", " "))}</td><td><button class="case-button" type="button" data-job="${job.id}">${job.id.slice(0, 8)}</button></td>`;
+      const status = job.status.replaceAll("_", " ");
+      row.innerHTML = `<td>${escapeText(job.source_name)}</td><td>${new Date(job.created_at).toLocaleString()}</td><td>${escapeText(job.media_type)}</td><td>${escapeText(status)}</td><td><button class="case-button" type="button" data-job="${job.id}" aria-label="Open ${escapeText(job.source_name)} case, status ${escapeText(status)}">${job.id.slice(0, 8)}</button></td>`;
       table.append(row);
     });
   } catch (error) {
     showToast(error.message);
+  } finally {
+    table.setAttribute("aria-busy", "false");
   }
 }
 
@@ -227,7 +306,9 @@ function activateTab(selectedTab, focusTab = false) {
 
 function switchView(name, focusHeading = false) {
   document.querySelectorAll(".view").forEach((view) => {
-    view.classList.toggle("active", view.id === `${name}View`);
+    const active = view.id === `${name}View`;
+    view.classList.toggle("active", active);
+    view.hidden = !active;
   });
 
   document.querySelectorAll(".nav-item").forEach((item) => {
@@ -251,7 +332,7 @@ function initialiseEvents() {
     event.preventDefault();
     dropZone.classList.remove("dragging");
   }));
-  dropZone.addEventListener("drop", (event) => selectFile(event.dataTransfer.files[0]));
+  dropZone.addEventListener("drop", (event) => selectFile(event.dataTransfer.files[0], true));
   document.querySelectorAll(".nav-item").forEach((button) => {
     button.addEventListener("click", () => switchView(button.dataset.view, true));
   });
