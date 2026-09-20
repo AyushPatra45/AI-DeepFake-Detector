@@ -6,6 +6,8 @@ import importlib.metadata
 import json
 import platform
 import subprocess
+import time
+from collections import Counter
 from pathlib import Path, PurePosixPath, PureWindowsPath
 
 import cv2
@@ -127,9 +129,13 @@ def evaluate_manifest(
 ) -> dict[str, object]:
     if image_size <= 0 or batch_size <= 0:
         raise ValueError("image_size and batch_size must be positive")
+    run_started = time.perf_counter()
     records = read_catalog(manifest_path)
+    load_started = time.perf_counter()
     runtime = load_runtime(checkpoint_path)
+    model_load_seconds = time.perf_counter() - load_started
     threshold = runtime.threshold if threshold_override is None else threshold_override
+    prediction_started = time.perf_counter()
     rows = _predict_records(
         records,
         data_root=data_root,
@@ -138,11 +144,26 @@ def evaluate_manifest(
         batch_size=batch_size,
         threshold=threshold,
     )
+    prediction_seconds = time.perf_counter() - prediction_started
     evaluated = [row for row in rows if row["status"] == "evaluated"]
     if not evaluated:
         raise ValueError("No samples could be evaluated; check paths and face detection")
     labels = [int(row["label"]) for row in evaluated]
     scores = [float(row["score"]) for row in evaluated]
+    original_rows = [row for row in evaluated if row["manipulation"] == "original"]
+    manipulation_metrics = {}
+    for manipulation in sorted(
+        {str(row["manipulation"]) for row in evaluated if row["manipulation"] != "original"}
+    ):
+        comparison_rows = original_rows + [
+            row for row in evaluated if row["manipulation"] == manipulation
+        ]
+        comparison_labels = [int(row["label"]) for row in comparison_rows]
+        comparison_scores = [float(row["score"]) for row in comparison_rows]
+        manipulation_metrics[manipulation] = binary_metrics(
+            comparison_labels, comparison_scores, threshold=threshold
+        )
+    total_seconds = time.perf_counter() - run_started
     results: dict[str, object] = {
         "model": {
             "name": "dual-stream-0.1.0",
@@ -158,6 +179,22 @@ def evaluate_manifest(
             "evaluated_samples": len(evaluated),
             "no_face_samples": sum(row["status"] == "no_face" for row in rows),
             "read_errors": sum(row["status"] == "read_error" for row in rows),
+            "samples_by_manipulation": dict(
+                sorted(Counter(str(row["manipulation"]) for row in rows).items())
+            ),
+            "failures_by_manipulation": {
+                manipulation: {
+                    "no_face": sum(
+                        row["manipulation"] == manipulation and row["status"] == "no_face"
+                        for row in rows
+                    ),
+                    "read_error": sum(
+                        row["manipulation"] == manipulation and row["status"] == "read_error"
+                        for row in rows
+                    ),
+                }
+                for manipulation in sorted({str(row["manipulation"]) for row in rows})
+            },
         },
         "environment": {
             "python": platform.python_version(),
@@ -169,6 +206,15 @@ def evaluate_manifest(
             },
         },
         "metrics": binary_metrics(labels, scores, threshold=threshold),
+        "metrics_by_manipulation": manipulation_metrics,
+        "runtime": {
+            "model_load_seconds": model_load_seconds,
+            "prediction_seconds": prediction_seconds,
+            "total_seconds": total_seconds,
+            "evaluated_samples_per_second": (
+                len(evaluated) / prediction_seconds if prediction_seconds > 0 else None
+            ),
+        },
     }
 
     output_dir.mkdir(parents=True, exist_ok=True)
