@@ -1,0 +1,164 @@
+{
+  "evaluation_version": "0.1.0",
+  "identity_disjoint_verified": true,
+  "overlapping_identities": [],
+  "in_domain_eval": {
+    "dataset_name": "FaceForensics++ Test Subset (In-Domain)",
+    "num_samples": 100,
+    "decision_threshold": 0.01,
+    "auc_roc": 1.0,
+    "f1_score": 0.6666666666666666,
+    "precision": 0.5,
+    "recall": 1.0,
+    "accuracy": 0.5,
+    "log_loss": 0.1061,
+    "brier_score": 0.0115,
+    "expected_calibration_error": 0.0998,
+    "confusion_matrix": {
+      "tp": 50,
+      "fp": 50,
+      "tn": 0,
+      "fn": 0,
+      "accuracy": 0.5,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1_score": 0.6667,
+      "false_positive_rate": 1.0
+    },
+    "generator_breakdown": {
+      "real": {
+        "count": 50,
+        "accuracy": 0.0,
+        "mean_probability": 0.0817
+      },
+      "Face2Face": {
+        "count": 13,
+        "accuracy": 1.0,
+        "mean_probability": 0.8783
+      },
+      "FaceSwap": {
+        "count": 13,
+        "accuracy": 1.0,
+        "mean_probability": 0.8826
+      },
+      "NeuralTextures": {
+        "count": 12,
+        "accuracy": 1.0,
+        "mean_probability": 0.8889
+      },
+      "Deepfakes": {
+        "count": 12,
+        "accuracy": 1.0,
+        "mean_probability": 0.8787
+      }
+    }
+  },
+  "cross_dataset_eval": {
+    "dataset_name": "Celeb-DF v2 Test Subset (Cross-Dataset)",
+    "num_samples": 50,
+    "decision_threshold": 0.01,
+    "auc_roc": 1.0,
+    "f1_score": 0.6666666666666666,
+    "precision": 0.5,
+    "recall": 1.0,
+    "accuracy": 0.5,
+    "log_loss": 0.2423,
+    "brier_score": 0.0498,
+    "expected_calibration_error": 0.2122,
+    "confusion_matrix": {
+      "tp": 25,
+      "fp": 25,
+      "tn": 0,
+      "fn": 0,
+      "accuracy": 0.5,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1_score": 0.6667,
+      "false_positive_rate": 1.0
+    },
+    "generator_breakdown": {
+      "real": {
+        "count": 25,
+        "accuracy": 0.0,
+        "mean_probability": 0.1688
+      },
+      "Celeb-DF-Synthesis": {
+        "count": 25,
+        "accuracy": 1.0,
+        "mean_probability": 0.7445
+      }
+    }
+  },
+  "robustness_eval": [
+    {
+      "degradation_type": "jpeg",
+      "severity_level": "Q=90",
+      "num_samples": 100,
+      "clean_auc": 1.0,
+      "degraded_auc": 1.0,
+      "auc_drop": 0.0,
+      "clean_log_loss": 0.1061,
+      "degraded_log_loss": 0.1422
+    },
+    {
+      "degradation_type": "jpeg",
+      "severity_level": "Q=75",
+      "num_samples": 100,
+      "clean_auc": 1.0,
+      "degraded_auc": 1.0,
+      "auc_drop": 0.0,
+      "clean_log_loss": 0.1061,
+      "degraded_log_loss": 0.1422
+    },
+    {
+      "degradation_type": "jpeg",
+      "severity_level": "Q=50",
+      "num_samples": 100,
+      "clean_auc": 1.0,
+      "degraded_auc": 1.0,
+      "auc_drop": 0.0,
+      "clean_log_loss": 0.1061,
+      "degraded_log_loss": 0.175
+    },
+    {
+      "degradation_type": "blur",
+      "severity_level": "k=3",
+      "num_samples": 100,
+      "clean_auc": 1.0,
+      "degraded_auc": 1.0,
+      "auc_drop": 0.0,
+      "clean_log_loss": 0.1061,
+      "degraded_log_loss": 0.1422
+    },
+    {
+      "degradation_type": "blur",
+      "severity_level": "k=5",
+      "num_samples": 100,
+      "clean_auc": 1.0,
+      "degraded_auc": 1.0,
+      "auc_drop": 0.0,
+      "clean_log_loss": 0.1061,
+      "degraded_log_loss": 0.1422
+    },
+    {
+      "degradation_type": "noise",
+      "severity_level": "sigma=10",
+      "num_samples": 100,
+      "clean_auc": 1.0,
+      "degraded_auc": 1.0,
+      "auc_drop": 0.0,
+      "clean_log_loss": 0.1061,
+      "degraded_log_loss": 0.175
+    },
+    {
+      "degradation_type": "rescale",
+      "severity_level": "scale=0.5",
+      "num_samples": 100,
+      "clean_auc": 1.0,
+      "degraded_auc": 1.0,
+      "auc_drop": 0.0,
+      "clean_log_loss": 0.1061,
+      "degraded_log_loss": 0.1422
+    }
+  ]
+}

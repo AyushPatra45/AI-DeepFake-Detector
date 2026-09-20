@@ -1,0 +1,461 @@
+{
+  "name": "Celeb-DF v2 Test Subset (Cross-Dataset)",
+  "description": "Fixed out-of-distribution cross-dataset test subset of Celeb-DF v2 (25 real, 25 fake)",
+  "split": "cross_test",
+  "total_items": 50,
+  "num_real": 25,
+  "num_fake": 25,
+  "unique_identities": 10,
+  "items": [
+    {
+      "item_id": "celeb_real_001",
+      "relative_path": "celebdf/real/celeb_real_001.png",
+      "label": 0,
+      "identity_id": "celeb_id_202",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "c7f0d138d55bd727e8fe0b548d6eee6f64ede29522b59434e11198188a58dd5b"
+    },
+    {
+      "item_id": "celeb_fake_001",
+      "relative_path": "celebdf/fake/celeb_fake_001.png",
+      "label": 1,
+      "identity_id": "celeb_id_202",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "4dcccded83e31deff80eeb55e909a4eb38449ce4ceb54876182d64d885acacd9"
+    },
+    {
+      "item_id": "celeb_real_002",
+      "relative_path": "celebdf/real/celeb_real_002.png",
+      "label": 0,
+      "identity_id": "celeb_id_203",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "2628c9ba7227f58b130d88150bf130afc8bdb0c3254aa76b6254585350f96bdb"
+    },
+    {
+      "item_id": "celeb_fake_002",
+      "relative_path": "celebdf/fake/celeb_fake_002.png",
+      "label": 1,
+      "identity_id": "celeb_id_203",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "517fb30dd048f41bc2335c5a12613825e05f02ba82317f101e7a11d26722799d"
+    },
+    {
+      "item_id": "celeb_real_003",
+      "relative_path": "celebdf/real/celeb_real_003.png",
+      "label": 0,
+      "identity_id": "celeb_id_204",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "a8d362b2726315733dd53665abf0e0775d2d57556661c57e17b66f30fdbf1931"
+    },
+    {
+      "item_id": "celeb_fake_003",
+      "relative_path": "celebdf/fake/celeb_fake_003.png",
+      "label": 1,
+      "identity_id": "celeb_id_204",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "5493b1e83728f14b3117fe33aaf3c1c5d0b98ecedeae9d7ddd607aaf2fde1db3"
+    },
+    {
+      "item_id": "celeb_real_004",
+      "relative_path": "celebdf/real/celeb_real_004.png",
+      "label": 0,
+      "identity_id": "celeb_id_205",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "3bd6c9686d68da808c9ef8f5186c46f7c5fb634c3087dae8ee7b2d9684725a87"
+    },
+    {
+      "item_id": "celeb_fake_004",
+      "relative_path": "celebdf/fake/celeb_fake_004.png",
+      "label": 1,
+      "identity_id": "celeb_id_205",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "cd901b07068f0b5b1b1e0c7200e8e1fd4a05b48f40c910859d1ad72b3b20a5cb"
+    },
+    {
+      "item_id": "celeb_real_005",
+      "relative_path": "celebdf/real/celeb_real_005.png",
+      "label": 0,
+      "identity_id": "celeb_id_206",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "ae567dbe3754a15d41742a0f20220407836b9c2bcec63adb99abbc8189299da5"
+    },
+    {
+      "item_id": "celeb_fake_005",
+      "relative_path": "celebdf/fake/celeb_fake_005.png",
+      "label": 1,
+      "identity_id": "celeb_id_206",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "5ccae0b01b4fb654c12f520089895ecd4de5cb681a0648d337ca599309d412b1"
+    },
+    {
+      "item_id": "celeb_real_006",
+      "relative_path": "celebdf/real/celeb_real_006.png",
+      "label": 0,
+      "identity_id": "celeb_id_207",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "654bd769be8f92d7c365860b0ecafd91e71af2f34f268fb313091c46654c80e5"
+    },
+    {
+      "item_id": "celeb_fake_006",
+      "relative_path": "celebdf/fake/celeb_fake_006.png",
+      "label": 1,
+      "identity_id": "celeb_id_207",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "9e47b3180165cabb37cb7de177bb66190149e0e9ddb2a75febd9cd41366787d9"
+    },
+    {
+      "item_id": "celeb_real_007",
+      "relative_path": "celebdf/real/celeb_real_007.png",
+      "label": 0,
+      "identity_id": "celeb_id_208",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "b42a5a345f8b16e126320e96ab33923a6194d1448bead19551eed57d6ee93eab"
+    },
+    {
+      "item_id": "celeb_fake_007",
+      "relative_path": "celebdf/fake/celeb_fake_007.png",
+      "label": 1,
+      "identity_id": "celeb_id_208",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "3b7489f35092fe170d7e58b84289912917a10f103816e2c79910cc4bae70195f"
+    },
+    {
+      "item_id": "celeb_real_008",
+      "relative_path": "celebdf/real/celeb_real_008.png",
+      "label": 0,
+      "identity_id": "celeb_id_209",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "2573f265ec0bc093f0d4f7d66932f4ffd7b5a64c54997246f7ce7c6dc47f5969"
+    },
+    {
+      "item_id": "celeb_fake_008",
+      "relative_path": "celebdf/fake/celeb_fake_008.png",
+      "label": 1,
+      "identity_id": "celeb_id_209",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "99ebf111976852e62a6c5da2cf9b0b42b8104875720e4e5975db332b15df39bf"
+    },
+    {
+      "item_id": "celeb_real_009",
+      "relative_path": "celebdf/real/celeb_real_009.png",
+      "label": 0,
+      "identity_id": "celeb_id_210",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "f7af09abdc297d9f3fac6807b9c41f35f9075882f633aedcb7c4884b078dadd2"
+    },
+    {
+      "item_id": "celeb_fake_009",
+      "relative_path": "celebdf/fake/celeb_fake_009.png",
+      "label": 1,
+      "identity_id": "celeb_id_210",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "a926d6be1321309c5dc7a61caeccb77639cb80e2af2226b571ec0b8f902585d4"
+    },
+    {
+      "item_id": "celeb_real_010",
+      "relative_path": "celebdf/real/celeb_real_010.png",
+      "label": 0,
+      "identity_id": "celeb_id_201",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "09dea9679de6a308c22db1f130cc772b188fd2ec3e758a2d9d4adeccf6962871"
+    },
+    {
+      "item_id": "celeb_fake_010",
+      "relative_path": "celebdf/fake/celeb_fake_010.png",
+      "label": 1,
+      "identity_id": "celeb_id_201",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "ec307dbe5edb99d1d28035a94a4f5c7ab830f3c8e8e72f8cb652dce49d15a05b"
+    },
+    {
+      "item_id": "celeb_real_011",
+      "relative_path": "celebdf/real/celeb_real_011.png",
+      "label": 0,
+      "identity_id": "celeb_id_202",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "7747cce18a35db61f3e01979004d9b8b09730a4c8e5edfe3f40e6979ba87920a"
+    },
+    {
+      "item_id": "celeb_fake_011",
+      "relative_path": "celebdf/fake/celeb_fake_011.png",
+      "label": 1,
+      "identity_id": "celeb_id_202",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "a0474393856e6821e058b4c0c926fa981bd6350e71e27e053ab319422d933081"
+    },
+    {
+      "item_id": "celeb_real_012",
+      "relative_path": "celebdf/real/celeb_real_012.png",
+      "label": 0,
+      "identity_id": "celeb_id_203",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "abf83af50a0644b0f2043159756dd8fe719771d15ef849482e578f8535f3dcff"
+    },
+    {
+      "item_id": "celeb_fake_012",
+      "relative_path": "celebdf/fake/celeb_fake_012.png",
+      "label": 1,
+      "identity_id": "celeb_id_203",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "5d70d95b948760dcdc5e35f42452b78e45fb0903f3432c4b70f2cfd61b62229e"
+    },
+    {
+      "item_id": "celeb_real_013",
+      "relative_path": "celebdf/real/celeb_real_013.png",
+      "label": 0,
+      "identity_id": "celeb_id_204",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "2742e5e3db790feca2afca34b694be8db3a70879fb739bbe355dd1d63740ad9e"
+    },
+    {
+      "item_id": "celeb_fake_013",
+      "relative_path": "celebdf/fake/celeb_fake_013.png",
+      "label": 1,
+      "identity_id": "celeb_id_204",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "4a185c3a207a680684026048be4def9359d375f591694455635412b2135cd127"
+    },
+    {
+      "item_id": "celeb_real_014",
+      "relative_path": "celebdf/real/celeb_real_014.png",
+      "label": 0,
+      "identity_id": "celeb_id_205",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "18eeaabc9b283338808728647e0bb96ec226a43867f994e3e98dc44c2287d38a"
+    },
+    {
+      "item_id": "celeb_fake_014",
+      "relative_path": "celebdf/fake/celeb_fake_014.png",
+      "label": 1,
+      "identity_id": "celeb_id_205",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "fa413bede79c28f9b891d2dc646b781cdaa8730b9c31f82d6d5503c03ba64184"
+    },
+    {
+      "item_id": "celeb_real_015",
+      "relative_path": "celebdf/real/celeb_real_015.png",
+      "label": 0,
+      "identity_id": "celeb_id_206",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "6e9b95dcecc196ea0d490f2bf6cc060a288f15f109359b08b6c40ce5aa4a8bd5"
+    },
+    {
+      "item_id": "celeb_fake_015",
+      "relative_path": "celebdf/fake/celeb_fake_015.png",
+      "label": 1,
+      "identity_id": "celeb_id_206",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "e22f6833f6d4a04c884521a8e5a8a43713860b5d171ac166cda38c25c2c55330"
+    },
+    {
+      "item_id": "celeb_real_016",
+      "relative_path": "celebdf/real/celeb_real_016.png",
+      "label": 0,
+      "identity_id": "celeb_id_207",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "e2f42af1fb9d4cd1fdf17e1d28f206e74fa224716906322c65e74e11eba42458"
+    },
+    {
+      "item_id": "celeb_fake_016",
+      "relative_path": "celebdf/fake/celeb_fake_016.png",
+      "label": 1,
+      "identity_id": "celeb_id_207",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "a0e30d6c1100226d1177fbc869f20c1c7ee60638964e5d782996165dccfc9228"
+    },
+    {
+      "item_id": "celeb_real_017",
+      "relative_path": "celebdf/real/celeb_real_017.png",
+      "label": 0,
+      "identity_id": "celeb_id_208",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "872baf3fc08ca95e0a6159cfd1922054120812934bf52d3d5216a3a01bc1e8c5"
+    },
+    {
+      "item_id": "celeb_fake_017",
+      "relative_path": "celebdf/fake/celeb_fake_017.png",
+      "label": 1,
+      "identity_id": "celeb_id_208",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "380aebe8dee2fd66b65789d2f43b2f77f46ca4ddb0504805754f70d1ed3900f9"
+    },
+    {
+      "item_id": "celeb_real_018",
+      "relative_path": "celebdf/real/celeb_real_018.png",
+      "label": 0,
+      "identity_id": "celeb_id_209",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "11377051cc83e2eaf84169e41299c6536d6a8ad048c28ac8e902566903358975"
+    },
+    {
+      "item_id": "celeb_fake_018",
+      "relative_path": "celebdf/fake/celeb_fake_018.png",
+      "label": 1,
+      "identity_id": "celeb_id_209",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "312576356a87e0ba52f2e53df81b4d41ae0973f6aac96255ed1576d5deb01583"
+    },
+    {
+      "item_id": "celeb_real_019",
+      "relative_path": "celebdf/real/celeb_real_019.png",
+      "label": 0,
+      "identity_id": "celeb_id_210",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "4eb701dae53aaa4e8bad6d5daae37f12078592d60b2f5e0877323329fa503c4c"
+    },
+    {
+      "item_id": "celeb_fake_019",
+      "relative_path": "celebdf/fake/celeb_fake_019.png",
+      "label": 1,
+      "identity_id": "celeb_id_210",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "a48487291868561f8168977524bd87448a671d155131bdb4f68ec7efcbecd42b"
+    },
+    {
+      "item_id": "celeb_real_020",
+      "relative_path": "celebdf/real/celeb_real_020.png",
+      "label": 0,
+      "identity_id": "celeb_id_201",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "76c33d9e0951339f650914719e45890eba61f3f33a39c10e8f03337ccdf9fd6e"
+    },
+    {
+      "item_id": "celeb_fake_020",
+      "relative_path": "celebdf/fake/celeb_fake_020.png",
+      "label": 1,
+      "identity_id": "celeb_id_201",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "3732b037b131fa04974a6fed94b8a146b75f7099502bfb5ba7840b42edc0ec6e"
+    },
+    {
+      "item_id": "celeb_real_021",
+      "relative_path": "celebdf/real/celeb_real_021.png",
+      "label": 0,
+      "identity_id": "celeb_id_202",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "1dfcc07bc18b95e50b45cc17b83eee1eb700f4ff5e90bfe36c719918bac76415"
+    },
+    {
+      "item_id": "celeb_fake_021",
+      "relative_path": "celebdf/fake/celeb_fake_021.png",
+      "label": 1,
+      "identity_id": "celeb_id_202",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "3861c65a5b570ab77f040aa3a6488ef3ce17f2b826a5acb56d3aa51b72bdfe51"
+    },
+    {
+      "item_id": "celeb_real_022",
+      "relative_path": "celebdf/real/celeb_real_022.png",
+      "label": 0,
+      "identity_id": "celeb_id_203",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "d6d135454499e39293d6b86b4fbbb4f860ac9b723c1c9323651d017086396057"
+    },
+    {
+      "item_id": "celeb_fake_022",
+      "relative_path": "celebdf/fake/celeb_fake_022.png",
+      "label": 1,
+      "identity_id": "celeb_id_203",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "905ca7e3d1fdb4911081a00d70bf4fad1493b1b561bbf994002ea07a9550a541"
+    },
+    {
+      "item_id": "celeb_real_023",
+      "relative_path": "celebdf/real/celeb_real_023.png",
+      "label": 0,
+      "identity_id": "celeb_id_204",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "1fe50a802d70b1a377cc278227938b259442c4fe171fc16e8f3582dee3f552b8"
+    },
+    {
+      "item_id": "celeb_fake_023",
+      "relative_path": "celebdf/fake/celeb_fake_023.png",
+      "label": 1,
+      "identity_id": "celeb_id_204",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "992e83b0942c6dc8b6a90f1eaf782f5b6288297978bb73e81874b66b254a6e3e"
+    },
+    {
+      "item_id": "celeb_real_024",
+      "relative_path": "celebdf/real/celeb_real_024.png",
+      "label": 0,
+      "identity_id": "celeb_id_205",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "db75293e6846d9093489a266ddabaa36104dd65352faa046006d0ff6a0887736"
+    },
+    {
+      "item_id": "celeb_fake_024",
+      "relative_path": "celebdf/fake/celeb_fake_024.png",
+      "label": 1,
+      "identity_id": "celeb_id_205",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "96f4628e1bb75d6502c9c7cbc839fcdc0bc776c8f9499220f46824e6cc348070"
+    },
+    {
+      "item_id": "celeb_real_025",
+      "relative_path": "celebdf/real/celeb_real_025.png",
+      "label": 0,
+      "identity_id": "celeb_id_206",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "real",
+      "sha256": "55f59c4b11a16dab644197fbf97e6ae55b38d3941b10130e5b74a946e453b682"
+    },
+    {
+      "item_id": "celeb_fake_025",
+      "relative_path": "celebdf/fake/celeb_fake_025.png",
+      "label": 1,
+      "identity_id": "celeb_id_206",
+      "dataset_name": "Celeb-DF-v2",
+      "generator_family": "Celeb-DF-Synthesis",
+      "sha256": "e5b04120e2877a4356771cfdb9480219a999433992a4fd8a974e4cda99c0b017"
+    }
+  ]
+}

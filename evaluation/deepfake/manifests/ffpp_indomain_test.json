@@ -1,0 +1,911 @@
+{
+  "name": "FaceForensics++ Test Subset (In-Domain)",
+  "description": "Fixed identity-disjoint test subset of FaceForensics++ (50 real, 50 fake)",
+  "split": "test",
+  "total_items": 100,
+  "num_real": 50,
+  "num_fake": 50,
+  "unique_identities": 20,
+  "items": [
+    {
+      "item_id": "ffpp_real_001",
+      "relative_path": "ffpp/real/real_001.png",
+      "label": 0,
+      "identity_id": "ffpp_id_102",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "84e53bde2cdb7fb1cb8a8fbca191b0f06a20cc67b80320094846131561d4305d"
+    },
+    {
+      "item_id": "ffpp_fake_001",
+      "relative_path": "ffpp/fake/face2face_001.png",
+      "label": 1,
+      "identity_id": "ffpp_id_102",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Face2Face",
+      "sha256": "8396c0d55cdd583cc8eb77a774036407cc43d88df10cba2c26fd246b6b00f6fe"
+    },
+    {
+      "item_id": "ffpp_real_002",
+      "relative_path": "ffpp/real/real_002.png",
+      "label": 0,
+      "identity_id": "ffpp_id_103",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "719f9a5baefa79d41ec8b57503973ded0198b8a39c3b1a472bb8485d9e02e790"
+    },
+    {
+      "item_id": "ffpp_fake_002",
+      "relative_path": "ffpp/fake/faceswap_002.png",
+      "label": 1,
+      "identity_id": "ffpp_id_103",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "FaceSwap",
+      "sha256": "8eb5d363e5e6411a938af34297e25247aaf00c65e15daf3ae8d5b9d8ba8c5705"
+    },
+    {
+      "item_id": "ffpp_real_003",
+      "relative_path": "ffpp/real/real_003.png",
+      "label": 0,
+      "identity_id": "ffpp_id_104",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "d387904172038acf353dfd3ddebaad15bdcfac86b172423b3ca0e85960029212"
+    },
+    {
+      "item_id": "ffpp_fake_003",
+      "relative_path": "ffpp/fake/neuraltextures_003.png",
+      "label": 1,
+      "identity_id": "ffpp_id_104",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "NeuralTextures",
+      "sha256": "9bcc263ff2a53f5b909de4b55e7ac84f6e196ea5abdd6f57e264dec7e75c30c6"
+    },
+    {
+      "item_id": "ffpp_real_004",
+      "relative_path": "ffpp/real/real_004.png",
+      "label": 0,
+      "identity_id": "ffpp_id_105",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "16e02d97c7eadf3cb50d0a405c781fe40cf154e816432350b0f7f8a99939c9a2"
+    },
+    {
+      "item_id": "ffpp_fake_004",
+      "relative_path": "ffpp/fake/deepfakes_004.png",
+      "label": 1,
+      "identity_id": "ffpp_id_105",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Deepfakes",
+      "sha256": "6b02cb830a55aa383af6cc09dcc96929caf666e61ad1dd1fd14f65f64a147d75"
+    },
+    {
+      "item_id": "ffpp_real_005",
+      "relative_path": "ffpp/real/real_005.png",
+      "label": 0,
+      "identity_id": "ffpp_id_106",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "c78c690bfcf429607d606d8cc87fb72ebb9c962f3779f3c402655c001e3eaacb"
+    },
+    {
+      "item_id": "ffpp_fake_005",
+      "relative_path": "ffpp/fake/face2face_005.png",
+      "label": 1,
+      "identity_id": "ffpp_id_106",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Face2Face",
+      "sha256": "adf063dd5ab91e335eef4ed873ff70cc9cde76cbfb399973d976999d895fb59a"
+    },
+    {
+      "item_id": "ffpp_real_006",
+      "relative_path": "ffpp/real/real_006.png",
+      "label": 0,
+      "identity_id": "ffpp_id_107",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "6511d66099e7bb515dfa550a750e133337858c534d55635e74deed8ab62e3478"
+    },
+    {
+      "item_id": "ffpp_fake_006",
+      "relative_path": "ffpp/fake/faceswap_006.png",
+      "label": 1,
+      "identity_id": "ffpp_id_107",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "FaceSwap",
+      "sha256": "1706ff2ad7d22beae101ef58e7b7830be5fda3533feade275d11707e4956094a"
+    },
+    {
+      "item_id": "ffpp_real_007",
+      "relative_path": "ffpp/real/real_007.png",
+      "label": 0,
+      "identity_id": "ffpp_id_108",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "dfef3db242fab4fe984d95d319ec699e33cf597bcbdf2f17da971a54d3beb67b"
+    },
+    {
+      "item_id": "ffpp_fake_007",
+      "relative_path": "ffpp/fake/neuraltextures_007.png",
+      "label": 1,
+      "identity_id": "ffpp_id_108",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "NeuralTextures",
+      "sha256": "b5ed48dd52e7899d4d1a6405cacfe56c3a91aab710ad12f200485d6c46ad6f04"
+    },
+    {
+      "item_id": "ffpp_real_008",
+      "relative_path": "ffpp/real/real_008.png",
+      "label": 0,
+      "identity_id": "ffpp_id_109",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "eb45ffd42f49034617135a025b00977a98daef84c813d92e91bdce078c8e1576"
+    },
+    {
+      "item_id": "ffpp_fake_008",
+      "relative_path": "ffpp/fake/deepfakes_008.png",
+      "label": 1,
+      "identity_id": "ffpp_id_109",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Deepfakes",
+      "sha256": "5e3534b9e9ba2b2a1206dde8c61123d9dc85b6b51773d02d6c1b8ed77aeedb2c"
+    },
+    {
+      "item_id": "ffpp_real_009",
+      "relative_path": "ffpp/real/real_009.png",
+      "label": 0,
+      "identity_id": "ffpp_id_110",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "63478a3950fb0fa68536e7a8744991372b6d540e2e3c240a8f0de097df1cb46c"
+    },
+    {
+      "item_id": "ffpp_fake_009",
+      "relative_path": "ffpp/fake/face2face_009.png",
+      "label": 1,
+      "identity_id": "ffpp_id_110",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Face2Face",
+      "sha256": "2604736115fc83218d9ec2744f4c24327c50bf2ec3dcabdda4191591965e485e"
+    },
+    {
+      "item_id": "ffpp_real_010",
+      "relative_path": "ffpp/real/real_010.png",
+      "label": 0,
+      "identity_id": "ffpp_id_111",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "926e798d843cdd9de04206e6766873ca64324f660b33dce04609827d0b1c93fb"
+    },
+    {
+      "item_id": "ffpp_fake_010",
+      "relative_path": "ffpp/fake/faceswap_010.png",
+      "label": 1,
+      "identity_id": "ffpp_id_111",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "FaceSwap",
+      "sha256": "58d42e11f54da23cf4852eb01ba3b4e6c00b98ae88de0997ffa2c7c203a506e5"
+    },
+    {
+      "item_id": "ffpp_real_011",
+      "relative_path": "ffpp/real/real_011.png",
+      "label": 0,
+      "identity_id": "ffpp_id_112",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "f488a555b9783613bf94215db6d6b20253ec9a20b7cfc21b85da5a44fb2636d0"
+    },
+    {
+      "item_id": "ffpp_fake_011",
+      "relative_path": "ffpp/fake/neuraltextures_011.png",
+      "label": 1,
+      "identity_id": "ffpp_id_112",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "NeuralTextures",
+      "sha256": "a7f7b5e3a14af97d3a782b38f148c336f008c83832f621b013f3ef150107796c"
+    },
+    {
+      "item_id": "ffpp_real_012",
+      "relative_path": "ffpp/real/real_012.png",
+      "label": 0,
+      "identity_id": "ffpp_id_113",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "368ef84fd7d9809f9cbbc2f0af92f2209eb0f83dd0056e19a9bab3bf3ab76249"
+    },
+    {
+      "item_id": "ffpp_fake_012",
+      "relative_path": "ffpp/fake/deepfakes_012.png",
+      "label": 1,
+      "identity_id": "ffpp_id_113",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Deepfakes",
+      "sha256": "f06c19783457177fafa763e9fda3906782055cfa06ed00d2e8411bcc156e3eba"
+    },
+    {
+      "item_id": "ffpp_real_013",
+      "relative_path": "ffpp/real/real_013.png",
+      "label": 0,
+      "identity_id": "ffpp_id_114",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "18ba9118b25f51bad56e7967bb1e30495f9173d0b141c530a4680823b0937daf"
+    },
+    {
+      "item_id": "ffpp_fake_013",
+      "relative_path": "ffpp/fake/face2face_013.png",
+      "label": 1,
+      "identity_id": "ffpp_id_114",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Face2Face",
+      "sha256": "48553beb5a6b703fe2700a74a8076b56661ac5a78a3d40c0d0eeef5d06259b0a"
+    },
+    {
+      "item_id": "ffpp_real_014",
+      "relative_path": "ffpp/real/real_014.png",
+      "label": 0,
+      "identity_id": "ffpp_id_115",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "8f6ea113ba1c0abc52e97e4747ac5344ddcebba1cb4d2d8bf0025d6cd5a6c7a9"
+    },
+    {
+      "item_id": "ffpp_fake_014",
+      "relative_path": "ffpp/fake/faceswap_014.png",
+      "label": 1,
+      "identity_id": "ffpp_id_115",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "FaceSwap",
+      "sha256": "fc1f15ddfb77b7312ab2aa44329b357c23c0af93cb8944d11ba798443cf06d3a"
+    },
+    {
+      "item_id": "ffpp_real_015",
+      "relative_path": "ffpp/real/real_015.png",
+      "label": 0,
+      "identity_id": "ffpp_id_116",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "e29df366268bcccc3ae270549c64216c320c082b969dbc7aacccfadf7ff84ffb"
+    },
+    {
+      "item_id": "ffpp_fake_015",
+      "relative_path": "ffpp/fake/neuraltextures_015.png",
+      "label": 1,
+      "identity_id": "ffpp_id_116",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "NeuralTextures",
+      "sha256": "e4274c8c9825abd9c0e97cc15a5f56fc419b88f10ee0c6e3ee85172a22fb5d63"
+    },
+    {
+      "item_id": "ffpp_real_016",
+      "relative_path": "ffpp/real/real_016.png",
+      "label": 0,
+      "identity_id": "ffpp_id_117",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "f2f08bd543edfc55cde8e657d71c95b6c93f9eba815801b3a7aa6a4c36b20858"
+    },
+    {
+      "item_id": "ffpp_fake_016",
+      "relative_path": "ffpp/fake/deepfakes_016.png",
+      "label": 1,
+      "identity_id": "ffpp_id_117",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Deepfakes",
+      "sha256": "06cb223522eec3008153eb802422e7fce0fca5f610487df80320471085b6f67a"
+    },
+    {
+      "item_id": "ffpp_real_017",
+      "relative_path": "ffpp/real/real_017.png",
+      "label": 0,
+      "identity_id": "ffpp_id_118",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "dfaa717bf5342789e880cf7894514005209646cd54d041dd490e52fc974a7aa8"
+    },
+    {
+      "item_id": "ffpp_fake_017",
+      "relative_path": "ffpp/fake/face2face_017.png",
+      "label": 1,
+      "identity_id": "ffpp_id_118",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Face2Face",
+      "sha256": "f229052599fbc8efa9e537b73dfb16f110fb0ef9c98b5518a24d7d2abf1ae0c3"
+    },
+    {
+      "item_id": "ffpp_real_018",
+      "relative_path": "ffpp/real/real_018.png",
+      "label": 0,
+      "identity_id": "ffpp_id_119",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "67288ad68c9408b4246635ba1d0b28093196138b60b4d9e6268a9c4122226008"
+    },
+    {
+      "item_id": "ffpp_fake_018",
+      "relative_path": "ffpp/fake/faceswap_018.png",
+      "label": 1,
+      "identity_id": "ffpp_id_119",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "FaceSwap",
+      "sha256": "962ea0e5fe5fe28e608e8a9e6184b8152add54daa71f39ef6a24dc0b1eaf5e90"
+    },
+    {
+      "item_id": "ffpp_real_019",
+      "relative_path": "ffpp/real/real_019.png",
+      "label": 0,
+      "identity_id": "ffpp_id_120",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "b44e0dbd43b15b58d683aaaaaf348a9e5834ab0d9ba7ae197a588509262da6a9"
+    },
+    {
+      "item_id": "ffpp_fake_019",
+      "relative_path": "ffpp/fake/neuraltextures_019.png",
+      "label": 1,
+      "identity_id": "ffpp_id_120",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "NeuralTextures",
+      "sha256": "6b4194714ace97a8c9beecf362ae5a5cd88ccffb9797d543857a5dd5b9cfdba5"
+    },
+    {
+      "item_id": "ffpp_real_020",
+      "relative_path": "ffpp/real/real_020.png",
+      "label": 0,
+      "identity_id": "ffpp_id_101",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "68f19ba7b1a1b1cf0b11a5aff21de3d01229196594727f0606948af23f2ec447"
+    },
+    {
+      "item_id": "ffpp_fake_020",
+      "relative_path": "ffpp/fake/deepfakes_020.png",
+      "label": 1,
+      "identity_id": "ffpp_id_101",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Deepfakes",
+      "sha256": "c8ef729ce4ca7f513f10a077acf53bdfa2a228e576fe00db87b7bc61ec291070"
+    },
+    {
+      "item_id": "ffpp_real_021",
+      "relative_path": "ffpp/real/real_021.png",
+      "label": 0,
+      "identity_id": "ffpp_id_102",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "5ae1ca9d9532fec87e06280d8cf27b96a3519da33219a1ef18211036990223a2"
+    },
+    {
+      "item_id": "ffpp_fake_021",
+      "relative_path": "ffpp/fake/face2face_021.png",
+      "label": 1,
+      "identity_id": "ffpp_id_102",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Face2Face",
+      "sha256": "628d98db9a8bc1b255fc5cee5aee4307603d1c9f223a736fdbaf5d931fdbbfc9"
+    },
+    {
+      "item_id": "ffpp_real_022",
+      "relative_path": "ffpp/real/real_022.png",
+      "label": 0,
+      "identity_id": "ffpp_id_103",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "11346d4e638afde31226b736b0fc70bf58f5761026b63fa299cb500d70b1772f"
+    },
+    {
+      "item_id": "ffpp_fake_022",
+      "relative_path": "ffpp/fake/faceswap_022.png",
+      "label": 1,
+      "identity_id": "ffpp_id_103",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "FaceSwap",
+      "sha256": "e6bb8185f478ca51092e5c426a90fabe7fe58981a91a0749615835b4750c8bef"
+    },
+    {
+      "item_id": "ffpp_real_023",
+      "relative_path": "ffpp/real/real_023.png",
+      "label": 0,
+      "identity_id": "ffpp_id_104",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "a822d93538239b44576bc475ed79295c1bbfb4cfa8bdff7e3d735e8aa10e29a0"
+    },
+    {
+      "item_id": "ffpp_fake_023",
+      "relative_path": "ffpp/fake/neuraltextures_023.png",
+      "label": 1,
+      "identity_id": "ffpp_id_104",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "NeuralTextures",
+      "sha256": "d16fc699a0f39c29269c9e2106873bcae611c1a3bc695298bac3ca8d93a91e2f"
+    },
+    {
+      "item_id": "ffpp_real_024",
+      "relative_path": "ffpp/real/real_024.png",
+      "label": 0,
+      "identity_id": "ffpp_id_105",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "d033dd8487609d5f9d27aac48df3ace8a18b13ec3ea8b637450dc10c3f2479ff"
+    },
+    {
+      "item_id": "ffpp_fake_024",
+      "relative_path": "ffpp/fake/deepfakes_024.png",
+      "label": 1,
+      "identity_id": "ffpp_id_105",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Deepfakes",
+      "sha256": "8e53255791b9246d8017202abe443b1ad545926736b4b84c267c00a38cd3fdf9"
+    },
+    {
+      "item_id": "ffpp_real_025",
+      "relative_path": "ffpp/real/real_025.png",
+      "label": 0,
+      "identity_id": "ffpp_id_106",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "1eb00520944d54d1b0a311df149ccbb3169f28522ffde4fa0c5191d2fa33049e"
+    },
+    {
+      "item_id": "ffpp_fake_025",
+      "relative_path": "ffpp/fake/face2face_025.png",
+      "label": 1,
+      "identity_id": "ffpp_id_106",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Face2Face",
+      "sha256": "f63f054b0ef37baf5c24a65f36105cf3f0bd67eca5731b7791f5a5774abe62ae"
+    },
+    {
+      "item_id": "ffpp_real_026",
+      "relative_path": "ffpp/real/real_026.png",
+      "label": 0,
+      "identity_id": "ffpp_id_107",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "2b69d786e03c75a4780246b056b830d6d5af582ff9e7d992be604a4e5d1f3037"
+    },
+    {
+      "item_id": "ffpp_fake_026",
+      "relative_path": "ffpp/fake/faceswap_026.png",
+      "label": 1,
+      "identity_id": "ffpp_id_107",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "FaceSwap",
+      "sha256": "4884c660b6740b48cd3c84ffca5a15c39dcaba4630d024891ada50482f07bcfe"
+    },
+    {
+      "item_id": "ffpp_real_027",
+      "relative_path": "ffpp/real/real_027.png",
+      "label": 0,
+      "identity_id": "ffpp_id_108",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "85c091e6910e7e13bb38fe05a24eb94f0fb7bb832122c748a56005bc971b0dec"
+    },
+    {
+      "item_id": "ffpp_fake_027",
+      "relative_path": "ffpp/fake/neuraltextures_027.png",
+      "label": 1,
+      "identity_id": "ffpp_id_108",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "NeuralTextures",
+      "sha256": "5d26c2229be21d9bb7aa2a7efd1412177e05520ad67609855fbfb5e1196c49d9"
+    },
+    {
+      "item_id": "ffpp_real_028",
+      "relative_path": "ffpp/real/real_028.png",
+      "label": 0,
+      "identity_id": "ffpp_id_109",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "c6a11c562350613c58c3afb31f79e42901d789788160c05d9f1f70e03213a1a1"
+    },
+    {
+      "item_id": "ffpp_fake_028",
+      "relative_path": "ffpp/fake/deepfakes_028.png",
+      "label": 1,
+      "identity_id": "ffpp_id_109",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Deepfakes",
+      "sha256": "13111a62d4cf48fb94cb28be9f78a792354ab04dd7eb1b417356a91e0ee839e8"
+    },
+    {
+      "item_id": "ffpp_real_029",
+      "relative_path": "ffpp/real/real_029.png",
+      "label": 0,
+      "identity_id": "ffpp_id_110",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "ba73b51ffbf3db22730b3fc272d964ef68e3a0e3bbf77daa20327a66bbf7e59f"
+    },
+    {
+      "item_id": "ffpp_fake_029",
+      "relative_path": "ffpp/fake/face2face_029.png",
+      "label": 1,
+      "identity_id": "ffpp_id_110",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Face2Face",
+      "sha256": "77404e7fc966463d23099a311b109b3a9d255840ab28b101e4ccb0cc7aadf53c"
+    },
+    {
+      "item_id": "ffpp_real_030",
+      "relative_path": "ffpp/real/real_030.png",
+      "label": 0,
+      "identity_id": "ffpp_id_111",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "c1f321577703e36ec19783f4d02f63e560c6bc17b2aa4ecbfbae66f88cbccfe8"
+    },
+    {
+      "item_id": "ffpp_fake_030",
+      "relative_path": "ffpp/fake/faceswap_030.png",
+      "label": 1,
+      "identity_id": "ffpp_id_111",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "FaceSwap",
+      "sha256": "d7274ff54afbe252cf50c066b7b5a9b467803b797178332c5b7f97b5621957fd"
+    },
+    {
+      "item_id": "ffpp_real_031",
+      "relative_path": "ffpp/real/real_031.png",
+      "label": 0,
+      "identity_id": "ffpp_id_112",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "3880f1509aec2087080a3c11cbea46771f411fdccf506e50a704063a9d0dd4a4"
+    },
+    {
+      "item_id": "ffpp_fake_031",
+      "relative_path": "ffpp/fake/neuraltextures_031.png",
+      "label": 1,
+      "identity_id": "ffpp_id_112",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "NeuralTextures",
+      "sha256": "739d8399f4714ceddf224ff97983e5c68056cf526068714e8e3077b598ee5177"
+    },
+    {
+      "item_id": "ffpp_real_032",
+      "relative_path": "ffpp/real/real_032.png",
+      "label": 0,
+      "identity_id": "ffpp_id_113",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "912219215b0e28804b2aedd9982b7b0af6b9f871eae69805954ee47545390f5b"
+    },
+    {
+      "item_id": "ffpp_fake_032",
+      "relative_path": "ffpp/fake/deepfakes_032.png",
+      "label": 1,
+      "identity_id": "ffpp_id_113",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Deepfakes",
+      "sha256": "dc5233227114813e62cc928b407b2c5fbf7f9d31ce76d42da19e35fb87f9098b"
+    },
+    {
+      "item_id": "ffpp_real_033",
+      "relative_path": "ffpp/real/real_033.png",
+      "label": 0,
+      "identity_id": "ffpp_id_114",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "4431b513ae974ae3d4c22b10b7e94e5fa16316da9382d7a423170316cc233452"
+    },
+    {
+      "item_id": "ffpp_fake_033",
+      "relative_path": "ffpp/fake/face2face_033.png",
+      "label": 1,
+      "identity_id": "ffpp_id_114",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Face2Face",
+      "sha256": "1d4dbd8ebbb878a1756a4d324903da321b237122abc578c52ae60482f75056f8"
+    },
+    {
+      "item_id": "ffpp_real_034",
+      "relative_path": "ffpp/real/real_034.png",
+      "label": 0,
+      "identity_id": "ffpp_id_115",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "ceba8a2e512dcfe93729e6b7284b1edb51d73cd0dd0589a0e6972f50f8d59cfd"
+    },
+    {
+      "item_id": "ffpp_fake_034",
+      "relative_path": "ffpp/fake/faceswap_034.png",
+      "label": 1,
+      "identity_id": "ffpp_id_115",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "FaceSwap",
+      "sha256": "134e3572a90a9ecefd27764706ae251992e7f2389fe8291d95c16c2ca8d676a7"
+    },
+    {
+      "item_id": "ffpp_real_035",
+      "relative_path": "ffpp/real/real_035.png",
+      "label": 0,
+      "identity_id": "ffpp_id_116",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "28c20b2eb64d126e85d9306aabd0a077d174d067627e6f38516376a6a4dc96fb"
+    },
+    {
+      "item_id": "ffpp_fake_035",
+      "relative_path": "ffpp/fake/neuraltextures_035.png",
+      "label": 1,
+      "identity_id": "ffpp_id_116",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "NeuralTextures",
+      "sha256": "d0258abeea0b632871328019997caae3c1a43389b495ca31b8b688f112ca5bdb"
+    },
+    {
+      "item_id": "ffpp_real_036",
+      "relative_path": "ffpp/real/real_036.png",
+      "label": 0,
+      "identity_id": "ffpp_id_117",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "3d26406d92b51b7d7599c803b100f1d571b8d72f17fc26538c99cfca0e0ca9f4"
+    },
+    {
+      "item_id": "ffpp_fake_036",
+      "relative_path": "ffpp/fake/deepfakes_036.png",
+      "label": 1,
+      "identity_id": "ffpp_id_117",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Deepfakes",
+      "sha256": "5aafc980bd0f66159e63c4cef470ba62097dbbcd9b0f72859ef377138b9e701b"
+    },
+    {
+      "item_id": "ffpp_real_037",
+      "relative_path": "ffpp/real/real_037.png",
+      "label": 0,
+      "identity_id": "ffpp_id_118",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "c713ea04a2d0130ce54e431f3577f61db3ab805b910f1c2fa6a2f871a10d0ba5"
+    },
+    {
+      "item_id": "ffpp_fake_037",
+      "relative_path": "ffpp/fake/face2face_037.png",
+      "label": 1,
+      "identity_id": "ffpp_id_118",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Face2Face",
+      "sha256": "9b49036a0fe457dae425aa5229c1c21cee9a561bc9e4299981a2fb77b87afe43"
+    },
+    {
+      "item_id": "ffpp_real_038",
+      "relative_path": "ffpp/real/real_038.png",
+      "label": 0,
+      "identity_id": "ffpp_id_119",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "f3458647473c75838cf1d1951b4a27550ec7c04d04296cc5eceaca7accba2dfe"
+    },
+    {
+      "item_id": "ffpp_fake_038",
+      "relative_path": "ffpp/fake/faceswap_038.png",
+      "label": 1,
+      "identity_id": "ffpp_id_119",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "FaceSwap",
+      "sha256": "1f8c6bc841ba2aaa5ab2a801ae53075bd21874f16a42b54227cfcf798a4a3c45"
+    },
+    {
+      "item_id": "ffpp_real_039",
+      "relative_path": "ffpp/real/real_039.png",
+      "label": 0,
+      "identity_id": "ffpp_id_120",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "077accf6f685a5d935905278c88a2267d5560798fa57d6174cb294ded9bb73ba"
+    },
+    {
+      "item_id": "ffpp_fake_039",
+      "relative_path": "ffpp/fake/neuraltextures_039.png",
+      "label": 1,
+      "identity_id": "ffpp_id_120",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "NeuralTextures",
+      "sha256": "1d62226d16d4207f0692e7b1f0e7c853775c5c783956c31225d390cbf894f352"
+    },
+    {
+      "item_id": "ffpp_real_040",
+      "relative_path": "ffpp/real/real_040.png",
+      "label": 0,
+      "identity_id": "ffpp_id_101",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "8a66c74e1f3e81cb5b84f24c60f43f90602c919435c5f22cb3d375c29edf1f43"
+    },
+    {
+      "item_id": "ffpp_fake_040",
+      "relative_path": "ffpp/fake/deepfakes_040.png",
+      "label": 1,
+      "identity_id": "ffpp_id_101",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Deepfakes",
+      "sha256": "789a90ec8cb3b86f9633a832608a6949c3089ef4377ae2a0e7e254d1473ae544"
+    },
+    {
+      "item_id": "ffpp_real_041",
+      "relative_path": "ffpp/real/real_041.png",
+      "label": 0,
+      "identity_id": "ffpp_id_102",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "59884b168bcf4fde33b8f7e6ea07f453b1131462848c33659b8de0dcbb90249e"
+    },
+    {
+      "item_id": "ffpp_fake_041",
+      "relative_path": "ffpp/fake/face2face_041.png",
+      "label": 1,
+      "identity_id": "ffpp_id_102",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Face2Face",
+      "sha256": "615159804e02a77ce89562c3df89fe0bd0ef4515604dda2415fdfbb46fc09d0e"
+    },
+    {
+      "item_id": "ffpp_real_042",
+      "relative_path": "ffpp/real/real_042.png",
+      "label": 0,
+      "identity_id": "ffpp_id_103",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "51aa1eb1be0da48c1832c227e4cc2217573b97cba917642c40027cc048c6038a"
+    },
+    {
+      "item_id": "ffpp_fake_042",
+      "relative_path": "ffpp/fake/faceswap_042.png",
+      "label": 1,
+      "identity_id": "ffpp_id_103",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "FaceSwap",
+      "sha256": "0c9f68417fd387315e2561bccffadcca3c92033b5d913191b2f224e601cf82a4"
+    },
+    {
+      "item_id": "ffpp_real_043",
+      "relative_path": "ffpp/real/real_043.png",
+      "label": 0,
+      "identity_id": "ffpp_id_104",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "1aaad92437f81faa7b944fcd7e7fdde8eb5a692ec3acb1549765a35e2d2807be"
+    },
+    {
+      "item_id": "ffpp_fake_043",
+      "relative_path": "ffpp/fake/neuraltextures_043.png",
+      "label": 1,
+      "identity_id": "ffpp_id_104",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "NeuralTextures",
+      "sha256": "d3976f701b7e056e2d280b570ef4557099b316c26fcd690cdf7cc85c400a91c7"
+    },
+    {
+      "item_id": "ffpp_real_044",
+      "relative_path": "ffpp/real/real_044.png",
+      "label": 0,
+      "identity_id": "ffpp_id_105",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "6d0e5b463fb9cf7283e3498a96f47e03eb3ffac76ef1ee858261165f56acd9f2"
+    },
+    {
+      "item_id": "ffpp_fake_044",
+      "relative_path": "ffpp/fake/deepfakes_044.png",
+      "label": 1,
+      "identity_id": "ffpp_id_105",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Deepfakes",
+      "sha256": "9434248f0d81a6aacee0b26b713fa9bc6e6bd1688bf11e087877da14ea0353ce"
+    },
+    {
+      "item_id": "ffpp_real_045",
+      "relative_path": "ffpp/real/real_045.png",
+      "label": 0,
+      "identity_id": "ffpp_id_106",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "aa8fc42e8a24ad4ed5907f342d30b1357a1cb8cdfc37d10a1552612b010ceedc"
+    },
+    {
+      "item_id": "ffpp_fake_045",
+      "relative_path": "ffpp/fake/face2face_045.png",
+      "label": 1,
+      "identity_id": "ffpp_id_106",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Face2Face",
+      "sha256": "b85c64502f81e4ff7e7b7347719edcda51fa872c8d88cf7b403adb7f319c707a"
+    },
+    {
+      "item_id": "ffpp_real_046",
+      "relative_path": "ffpp/real/real_046.png",
+      "label": 0,
+      "identity_id": "ffpp_id_107",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "5e53474b491ea5ca6ec0f02e53e8d4e2abd5627cb5930e7439198ffe03887137"
+    },
+    {
+      "item_id": "ffpp_fake_046",
+      "relative_path": "ffpp/fake/faceswap_046.png",
+      "label": 1,
+      "identity_id": "ffpp_id_107",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "FaceSwap",
+      "sha256": "fa9cb479a5d0b3159e91037ff41dbeeea7f972747f7fe830ddf24858b36be008"
+    },
+    {
+      "item_id": "ffpp_real_047",
+      "relative_path": "ffpp/real/real_047.png",
+      "label": 0,
+      "identity_id": "ffpp_id_108",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "8b5c9034378a805752c0bc358d3c9fc84479b40b0451e86080785ecdbc0d610a"
+    },
+    {
+      "item_id": "ffpp_fake_047",
+      "relative_path": "ffpp/fake/neuraltextures_047.png",
+      "label": 1,
+      "identity_id": "ffpp_id_108",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "NeuralTextures",
+      "sha256": "37970b691f78f90eb288c759f9779bd0021a80a429d5aa259e8a9faa556d3d12"
+    },
+    {
+      "item_id": "ffpp_real_048",
+      "relative_path": "ffpp/real/real_048.png",
+      "label": 0,
+      "identity_id": "ffpp_id_109",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "f221fb72b91c425bf998eb7a9c1b365acc4ad96e3c49e1b86c59e2d11eab0998"
+    },
+    {
+      "item_id": "ffpp_fake_048",
+      "relative_path": "ffpp/fake/deepfakes_048.png",
+      "label": 1,
+      "identity_id": "ffpp_id_109",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Deepfakes",
+      "sha256": "7041138d0a9d7b95393f8263d54f47671b451cb22154836f33d62f3ea3fc7981"
+    },
+    {
+      "item_id": "ffpp_real_049",
+      "relative_path": "ffpp/real/real_049.png",
+      "label": 0,
+      "identity_id": "ffpp_id_110",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "3831d5732bc1a7bd79f3f8a48af145284ccb022bda9c8c80ca42f01e634e5de4"
+    },
+    {
+      "item_id": "ffpp_fake_049",
+      "relative_path": "ffpp/fake/face2face_049.png",
+      "label": 1,
+      "identity_id": "ffpp_id_110",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "Face2Face",
+      "sha256": "1c4cc8607c9fbbb95c8b49054a66272d46618d7374bda41057502a846f87b896"
+    },
+    {
+      "item_id": "ffpp_real_050",
+      "relative_path": "ffpp/real/real_050.png",
+      "label": 0,
+      "identity_id": "ffpp_id_111",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "real",
+      "sha256": "646cc935f4eb80c8b4a756099afdf50d1df63a5d261fca6391927980e8cde559"
+    },
+    {
+      "item_id": "ffpp_fake_050",
+      "relative_path": "ffpp/fake/faceswap_050.png",
+      "label": 1,
+      "identity_id": "ffpp_id_111",
+      "dataset_name": "FaceForensics++",
+      "generator_family": "FaceSwap",
+      "sha256": "f718e983c6a6fc9c99c3bd8df855df933503302b6b93437c234ee48f2e5da7e4"
+    }
+  ]
+}
