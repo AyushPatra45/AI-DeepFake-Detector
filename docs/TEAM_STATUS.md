@@ -1,6 +1,6 @@
 # Team Implementation Status
 
-Status date: 19 September 2026
+Status date: 20 September 2026
 
 ## Authorship note
 
@@ -30,7 +30,8 @@ claiming them as completed individual contributions.
 | Cross-dataset scientific evaluation | Palak | Not started | Required before final review |
 | Deterministic stego validation | Ayana | Complete and merged | Five supported extractions, six clean controls and five unsupported layouts evaluated |
 | Controlled ELA validation | Ayana | Complete and merged | Ten cases reproduced; benign highlight conditions and failed edit localisation documented |
-| Interface accessibility and user study | Ayana | In progress | Keyboard/accessibility fixes merged; five-person study pending |
+| Interface accessibility and study tooling | Ayana domain | Complete and merged | Defensive UI behavior, keyboard flow, study validator and live browser checks passed |
+| Five-person formative usability study | Team | Blocked on participants | Anonymous protocol ready; no participant result is claimed |
 
 ## Palak: required next work
 
@@ -54,11 +55,11 @@ unsupported keyed/channel layouts were measured and documented with explicit lim
 1. Pull merged `main`, read and explain `backend/app/forensics/` and `frontend/`.
 2. Y-02 is complete: ten controlled ELA cases and false-positive conditions are
    documented in `docs/FORENSICS_EVALUATION.md`.
-3. Y-03 accessibility audit and keyboard corrections are merged; review and explain
-   the changes recorded in `docs/USABILITY_EVALUATION.md`.
-4. Run the planned five-person usability test covering upload, result interpretation, visual
-   evidence, history, and report download.
-5. Improve accessibility and wording from the observed user errors.
+3. Y-03 engineering is complete; review and explain the corrections and limitations
+   recorded in `docs/USABILITY_EVALUATION.md`.
+4. Help the team recruit five real participants for the prepared formative study.
+5. Record only anonymous observations and make any later wording improvements from
+   observed user errors in a separate reviewed task.
 
 ## Ayush: integration status
 
@@ -74,7 +75,7 @@ CI are merged.
 - Published checkpoint SHA-256:
   `c5c2002b5ef6c7ee0c542d7d203e16386dc641b685859d8a58ac883b52c8e4c9`.
 - Checkpoint calibration loaded: threshold `0.01`, temperature `1.4788347482681274`.
-- Automated suite: 66 tests passing after PR #9 steganography evaluation integration.
+- Automated suite: 83 tests passing after Y-03 engineering completion.
 - Y-01 controlled evaluation: 5/5 supported payloads extracted exactly, 0/6 supported-
   payload false positives on clean controls, and 0/5 unsupported layouts falsely
   reported as supported; these figures are not real-world generalisation claims.
@@ -84,9 +85,12 @@ CI are merged.
 - Browser workflow: upload, processing, completed result, case history, five visual
   artifacts, and report links verified without console errors.
 - Responsive check: no horizontal document overflow at a 390-pixel viewport.
-- Y-03 accessibility progress: view focus, result focus, result-tab arrow navigation,
-  visible focus treatment, accessible navigation state, and table headers were verified;
-  76 automated tests passed. Participant usability results are not yet available.
+- Y-03 engineering: view and result focus, result-tab navigation, progress semantics,
+  visible focus, upload validation, stale-result reset, report/history labels, table
+  structure, reduced motion and persistent limitation wording were verified; 83 tests,
+  Ruff, JavaScript syntax and a live browser workflow passed.
+- The anonymous study validator prevents publication until five complete participant
+  records exist. Participant usability results are not yet available.
 
 ## Review wording
 
