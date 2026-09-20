@@ -16,6 +16,7 @@ from app.deepfake.runtime import ModelRuntime, load_runtime
 
 from evaluation.deepfake.catalog import CatalogRecord, read_catalog, sha256_file
 from evaluation.deepfake.metrics import binary_metrics
+from evaluation.deepfake.video_metrics import video_level_metrics
 
 PREDICTION_FIELDS = (
     "sample_id",
@@ -72,6 +73,7 @@ def _predict_records(
     image_size: int,
     batch_size: int,
     threshold: float,
+    progress_every: int = 0,
 ) -> list[dict[str, object]]:
     cropper = FaceCropper(target_size=image_size)
     rows: list[dict[str, object]] = []
@@ -89,7 +91,7 @@ def _predict_records(
         pending_faces.clear()
         pending_indexes.clear()
 
-    for record in records:
+    for record_index, record in enumerate(records, start=1):
         row: dict[str, object] = {
             "sample_id": record.sample_id,
             "path": record.path,
@@ -113,6 +115,8 @@ def _predict_records(
         pending_indexes.append(len(rows) - 1)
         if len(pending_faces) >= batch_size:
             flush()
+        if progress_every > 0 and record_index % progress_every == 0:
+            print(f"Processed {record_index}/{len(records)} manifest samples", flush=True)
     flush()
     return rows
 
@@ -126,9 +130,12 @@ def evaluate_manifest(
     image_size: int = 512,
     batch_size: int = 4,
     threshold_override: float | None = None,
+    progress_every: int = 0,
 ) -> dict[str, object]:
-    if image_size <= 0 or batch_size <= 0:
-        raise ValueError("image_size and batch_size must be positive")
+    if image_size <= 0 or batch_size <= 0 or progress_every < 0:
+        raise ValueError(
+            "image_size and batch_size must be positive; progress_every cannot be negative"
+        )
     run_started = time.perf_counter()
     records = read_catalog(manifest_path)
     load_started = time.perf_counter()
@@ -143,6 +150,7 @@ def evaluate_manifest(
         image_size=image_size,
         batch_size=batch_size,
         threshold=threshold,
+        progress_every=progress_every,
     )
     prediction_seconds = time.perf_counter() - prediction_started
     evaluated = [row for row in rows if row["status"] == "evaluated"]
@@ -207,6 +215,7 @@ def evaluate_manifest(
         },
         "metrics": binary_metrics(labels, scores, threshold=threshold),
         "metrics_by_manipulation": manipulation_metrics,
+        "video_level": video_level_metrics(rows, threshold=threshold),
         "runtime": {
             "model_load_seconds": model_load_seconds,
             "prediction_seconds": prediction_seconds,
@@ -253,6 +262,7 @@ def main() -> None:
     parser.add_argument("--image-size", type=int, default=512)
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--threshold", type=float)
+    parser.add_argument("--progress-every", type=int, default=100)
     args = parser.parse_args()
 
     results = evaluate_manifest(
@@ -263,6 +273,7 @@ def main() -> None:
         image_size=args.image_size,
         batch_size=args.batch_size,
         threshold_override=args.threshold,
+        progress_every=args.progress_every,
     )
     print(json.dumps(results, indent=2, sort_keys=True))
 

@@ -5,8 +5,10 @@ import hashlib
 import urllib.request
 from pathlib import Path
 
+MODEL_REVISION = "db138ed0a70e96b087c155912cc1d306d9a97eec"
 MODEL_URL = (
-    "https://huggingface.co/yyouretoast/deepfake-detector/resolve/main/dual_stream_calibrated.pth"
+    "https://huggingface.co/yyouretoast/deepfake-detector/resolve/"
+    f"{MODEL_REVISION}/dual_stream_calibrated.pth"
 )
 EXPECTED_SHA256 = "c5c2002b5ef6c7ee0c542d7d203e16386dc641b685859d8a58ac883b52c8e4c9"
 
