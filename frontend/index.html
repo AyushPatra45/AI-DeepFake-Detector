@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
+    <a class="skip-link" href="#workspace">Skip to workspace</a>
     <div class="app-shell">
       <aside class="sidebar">
         <a class="brand" href="/" aria-label="Forensics workspace home">
@@ -15,22 +16,24 @@
           <span>Forensics</span>
         </a>
         <nav aria-label="Workspace navigation">
-  <button class="nav-item active" data-view="analysis" type="button"
-          aria-label="New analysis" aria-pressed="true">
-    <span aria-hidden="true">＋</span><span>New analysis</span>
-  </button>
-  <button class="nav-item" data-view="history" type="button"
-          aria-label="Case history" aria-pressed="false">
-    <span aria-hidden="true">≡</span><span>Case history</span>
-  </button>
-</nav>
-<div class="sidebar-status" role="status" aria-live="polite">
-  <span class="status-dot" id="healthDot" aria-hidden="true"></span>
-  <span id="healthText">Checking engine</span>
-</div>
+          <button class="nav-item active" data-view="analysis" type="button"
+                  aria-label="New analysis" aria-controls="analysisView"
+                  aria-pressed="true">
+            <span aria-hidden="true">＋</span><span>New analysis</span>
+          </button>
+          <button class="nav-item" data-view="history" type="button"
+                  aria-label="Case history" aria-controls="historyView"
+                  aria-pressed="false">
+            <span aria-hidden="true">≡</span><span>Case history</span>
+          </button>
+        </nav>
+        <div class="sidebar-status" role="status" aria-live="polite" aria-atomic="true">
+          <span class="status-dot" id="healthDot" aria-hidden="true"></span>
+          <span id="healthText">Checking engine</span>
+        </div>
       </aside>
 
-      <main>
+      <main id="workspace" tabindex="-1">
         <header class="topbar">
           <div>
             <p class="eyebrow">Digital media laboratory</p>
@@ -52,22 +55,32 @@
 
               <form id="uploadForm">
                 <label class="drop-zone" id="dropZone" for="mediaFile">
-                  <input id="mediaFile" name="file" type="file" accept="image/jpeg,image/png,video/mp4,video/quicktime" required />
+                  <input id="mediaFile" name="file" type="file"
+                         accept="image/jpeg,image/png,video/mp4,video/quicktime"
+                         aria-describedby="uploadRequirements" required />
                   <span class="upload-symbol" aria-hidden="true">↑</span>
                   <span class="drop-title" id="dropTitle">Choose image or video</span>
                   <span class="drop-meta" id="dropMeta">Maximum 500 MB</span>
+                  <span class="sr-only" id="uploadRequirements">
+                    Accepted formats: JPEG, PNG, MP4, and MOV. Maximum file size 500 MB.
+                  </span>
                 </label>
                 <button class="primary-button" id="analyseButton" type="submit" disabled>
                   Start forensic analysis
                 </button>
               </form>
 
-              <div class="job-progress" id="jobProgress" hidden aria-live="polite">
+              <div class="job-progress" id="jobProgress" hidden role="status"
+                   aria-live="polite" aria-atomic="true">
                 <div class="progress-copy">
                   <span id="progressLabel">Queued</span>
                   <span id="progressId"></span>
                 </div>
-                <div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div>
+                <div class="progress-track" id="progressTrack" role="progressbar"
+                     aria-label="Analysis progress" aria-valuemin="0" aria-valuemax="100"
+                     aria-valuenow="0">
+                  <span id="progressBar" aria-hidden="true"></span>
+                </div>
               </div>
             </section>
 
@@ -89,9 +102,11 @@
                 <h2 id="resultHeading" tabindex="-1">Forensic findings</h2>
                 <p class="case-file" id="caseFile"></p>
               </div>
-              <div class="report-actions">
-                <a class="secondary-button" id="jsonReport" href="#" download>JSON</a>
-                <a class="secondary-button" id="pdfReport" href="#" download>PDF</a>
+              <div class="report-actions" id="reportActions">
+                <a class="secondary-button" id="jsonReport" href="#" download
+                   aria-label="Download JSON forensic report">JSON</a>
+                <a class="secondary-button" id="pdfReport" href="#" download
+                   aria-label="Download PDF forensic report">PDF</a>
               </div>
             </div>
 
@@ -100,77 +115,82 @@
                 <span class="score-label">Deepfake probability</span>
                 <strong id="riskScore">Unavailable</strong>
                 <span class="risk-badge neutral" id="riskDecision">Not evaluated</span>
+                <p class="risk-help" id="riskHelp">
+                  A model risk indicator, not proof that media is authentic or manipulated.
+                </p>
               </div>
               <dl class="evidence-summary">
                 <div><dt>Media</dt><dd id="mediaSummary">—</dd></div>
                 <div><dt>Frames analysed</dt><dd id="frameSummary">0</dd></div>
-                <div><dt>LSB payload</dt><dd id="lsbSummary">Not detected</dd></div>
+                <div><dt>Supported LSB payload</dt><dd id="lsbSummary">Not detected</dd></div>
                 <div><dt>Status</dt><dd id="statusSummary">—</dd></div>
               </dl>
             </div>
 
             <div class="tab-list" role="tablist" aria-label="Forensic result views">
-  <button class="tab active" id="overviewTab" role="tab"
-          aria-selected="true" aria-controls="overviewPanel"
-          tabindex="0" data-tab="overview" type="button">
-    Overview
-  </button>
-  <button class="tab" id="artifactsTab" role="tab"
-          aria-selected="false" aria-controls="artifactsPanel"
-          tabindex="-1" data-tab="artifacts" type="button">
-    Visual evidence
-  </button>
-  <button class="tab" id="framesTab" role="tab"
-          aria-selected="false" aria-controls="framesPanel"
-          tabindex="-1" data-tab="frames" type="button">
-    Video timeline
-  </button>
-</div>
+              <button class="tab active" id="overviewTab" role="tab"
+                      aria-selected="true" aria-controls="overviewPanel"
+                      tabindex="0" data-tab="overview" type="button">
+                Overview
+              </button>
+              <button class="tab" id="artifactsTab" role="tab"
+                      aria-selected="false" aria-controls="artifactsPanel"
+                      tabindex="-1" data-tab="artifacts" type="button">
+                Visual evidence
+              </button>
+              <button class="tab" id="framesTab" role="tab"
+                      aria-selected="false" aria-controls="framesPanel"
+                      tabindex="-1" data-tab="frames" type="button">
+                Video timeline
+              </button>
+            </div>
 
-<div class="tab-panel active" id="overviewPanel" role="tabpanel"
-     aria-labelledby="overviewTab" tabindex="0">
-  <div class="module-list" id="moduleList"></div>
-  <div class="warning-list" id="warningList"></div>
-</div>
-<div class="tab-panel" id="artifactsPanel" role="tabpanel"
-     aria-labelledby="artifactsTab" tabindex="0" hidden>
-  <div class="artifact-grid" id="artifactGrid"></div>
-</div>
-<div class="tab-panel" id="framesPanel" role="tabpanel"
-     aria-labelledby="framesTab" tabindex="0" hidden>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th scope="col">Frame</th>
-          <th scope="col">Timestamp</th>
-          <th scope="col">Deepfake probability</th>
-          <th scope="col">Evidence</th>
-        </tr>
-      </thead>
-      <tbody id="frameTable"></tbody>
-    </table>
-  </div>
-</div>
+            <div class="tab-panel active" id="overviewPanel" role="tabpanel"
+                 aria-labelledby="overviewTab" tabindex="0">
+              <div class="module-list" id="moduleList"></div>
+              <div class="warning-list" id="warningList"></div>
+            </div>
+            <div class="tab-panel" id="artifactsPanel" role="tabpanel"
+                 aria-labelledby="artifactsTab" tabindex="0" hidden>
+              <div class="artifact-grid" id="artifactGrid"></div>
+            </div>
+            <div class="tab-panel" id="framesPanel" role="tabpanel"
+                 aria-labelledby="framesTab" tabindex="0" hidden>
+              <div class="table-wrap">
+                <table>
+                  <caption class="sr-only">Sampled video frame evidence</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Frame</th>
+                      <th scope="col">Timestamp</th>
+                      <th scope="col">Deepfake probability</th>
+                      <th scope="col">Evidence</th>
+                    </tr>
+                  </thead>
+                  <tbody id="frameTable"></tbody>
+                </table>
+              </div>
+            </div>
           </section>
         </section>
-        <section id="historyView" class="view" aria-labelledby="historyHeading">
+        <section id="historyView" class="view" aria-labelledby="historyHeading" hidden>
           <div class="section-heading history-heading">
             <div><p class="eyebrow">Saved locally</p><h2 id="historyHeading" tabindex="-1">Case history</h2></div>
             <button class="secondary-button" id="refreshHistory" type="button">Refresh</button>
           </div>
           <div class="table-wrap history-table">
             <table>
+              <caption class="sr-only">Locally retained forensic analysis cases</caption>
               <thead>
-  <tr>
-    <th scope="col">File</th>
-    <th scope="col">Created</th>
-    <th scope="col">Type</th>
-    <th scope="col">Status</th>
-    <th scope="col">Case</th>
-  </tr>
-</thead>
-              <tbody id="historyTable"></tbody>
+                <tr>
+                  <th scope="col">File</th>
+                  <th scope="col">Created</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Case</th>
+                </tr>
+              </thead>
+              <tbody id="historyTable" aria-live="polite"></tbody>
             </table>
           </div>
         </section>

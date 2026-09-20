@@ -2,9 +2,10 @@
 
 ## Status
 
-Y-03 is in progress. This document separates the initial accessibility audit from
-the five-person usability study. No participant results are recorded until the
-study is actually conducted.
+The Y-03 engineering audit, keyboard corrections, defensive UI behavior, and
+reproducible study tooling are complete. The five-person study remains a human-data
+dependency. No participant results are recorded until five real participants conduct
+the tasks, so the repository does not make a fabricated usability claim.
 
 ## Scope
 
@@ -47,15 +48,39 @@ Environment:
 The unusual characters displayed by some PowerShell output are not counted as a
 browser defect because the browser renders the symbols correctly.
 
-## Planned corrections
+## Implemented corrections
 
-- Add accessible state information to application navigation.
-- Add complete tab and tab-panel relationships.
-- Implement Left Arrow, Right Arrow, Home and End behavior for tabs.
-- Add visible focus treatment to the upload area and interactive controls.
-- Move focus to the result heading when analysis finishes.
-- Preserve navigation accessible names in collapsed layouts.
-- Announce engine status changes.
+- Added a keyboard skip link and explicit upload requirements.
+- Added accessible state and control relationships to application navigation.
+- Added complete tab and tab-panel relationships.
+- Implemented Left Arrow, Right Arrow, Home, and End behavior for tabs.
+- Added visible focus treatment to the upload area and interactive controls.
+- Moved focus to view and result headings after context changes.
+- Preserved navigation accessible names in collapsed layouts.
+- Added live engine, progress, history, and error announcements.
+- Added progress-bar value semantics and reduced-motion support.
+- Reset stale result content and the active tab before showing each new case.
+- Hid report actions when a failed analysis has no reportable result.
+- Added client-side type and size checks for chooser and drag-and-drop uploads.
+- Added table captions and descriptive names for case and report actions.
+- Added persistent wording that model and ELA outputs are indicators, not proof.
+
+## Engineering verification
+
+Verification date: 2026-09-20
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| View navigation moves focus | Pass | Live browser check focused each active view heading |
+| Result tabs support keyboard navigation | Pass | Right Arrow selected Visual evidence and displayed its panel |
+| Result context receives focus | Pass | A reopened synthetic case focused Forensic findings |
+| Dynamic state is announced | Pass | Status regions and progress values expose live text and state |
+| Failed/new results cannot retain stale findings | Pass | `resetResult` clears summaries, evidence, warnings, frames, and reports |
+| Unsupported/oversized drops are rejected early | Pass | Client validation covers type, extension, and the 500 MB limit |
+| Automated regression suite | Pass | Accessibility, API, forensic, and evaluation tests pass together |
+
+These checks are engineering evidence, not a substitute for observations from real
+participants.
 
 ## Five-person usability study
 
@@ -83,6 +108,25 @@ After completing the five tasks, ask each participant:
 Record only the answers and participant identifier. Do not record names or other
 personal information.
 
+Create the anonymous study record with:
+
+```powershell
+python evaluation/usability/study.py init evaluation/usability/generated/study.json
+```
+
+After entering only the task statuses, three ratings, and two short comments for P1
+through P5, validate and summarize it with:
+
+```powershell
+python evaluation/usability/study.py summarize evaluation/usability/generated/study.json `
+  --output evaluation/usability/generated/summary.json
+```
+
+The validator accepts task outcomes `success`, `assisted`, `failed`, or `not_run`.
+It rejects unexpected participant fields to discourage storing names or other personal
+data. A summary is marked `publishable: true` only when all five task sets and rating
+sets are complete. Generated study records are excluded from Git.
+
 | Participant | Upload | Interpret result | Visual evidence | History | Report | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
 | P1 | Pending | Pending | Pending | Pending | Pending | |
@@ -95,3 +139,5 @@ personal information.
 
 The audit is not an accessibility conformance certification. The five-person study
 is a small formative study and must not be presented as population-level evidence.
+Automated checks cannot establish whether users understand the forensic limitations;
+that question requires the pending observed study.

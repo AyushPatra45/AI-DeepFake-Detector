@@ -78,6 +78,7 @@ presentations. See [Team Plan](docs/TEAM_PLAN.md) for the detailed split and han
 - [Platform Foundation Hand-off](docs/PLATFORM_HANDOFF.md)
 - [Team Implementation Status](docs/TEAM_STATUS.md)
 - [Palak Baseline Evaluation](docs/MODEL_EVALUATION.md)
+- [Accessibility and Usability Evaluation](docs/USABILITY_EVALUATION.md)
 - [Operations, Limits and Retention](docs/OPERATIONS.md)
 - [Synthetic Demonstration Corpus](docs/DEMO_CORPUS.md)
 - [Contributing and Git Workflow](CONTRIBUTING.md)
