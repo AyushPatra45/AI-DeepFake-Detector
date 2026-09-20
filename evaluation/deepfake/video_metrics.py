@@ -4,13 +4,19 @@ import argparse
 import csv
 import hashlib
 import json
+import math
+from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import cv2
 
+from evaluation.deepfake.metrics import binary_metrics
+
 MANIPULATIONS = ("Deepfakes", "Face2Face", "FaceSwap", "NeuralTextures")
 METADATA_FIELDS = ("path", "label", "identity_ids", "source_group", "manipulation")
+AGGREGATIONS = ("mean", "top20", "softmax")
 
 
 @dataclass(frozen=True)
@@ -91,6 +97,80 @@ def build_video_records(pairs: list[tuple[str, str]]) -> list[VideoRecord]:
     return records
 
 
+def _aggregate_scores(scores: list[float], method: str) -> float:
+    if not scores:
+        raise ValueError("Cannot aggregate an empty score list")
+    if method == "mean":
+        return sum(scores) / len(scores)
+    if method == "top20":
+        count = max(1, math.ceil(len(scores) * 0.2))
+        return sum(sorted(scores, reverse=True)[:count]) / count
+    if method == "softmax":
+        temperature = 0.1
+        scaled = [score / temperature for score in scores]
+        maximum = max(scaled)
+        weights = [math.exp(value - maximum) for value in scaled]
+        return sum(score * weight for score, weight in zip(scores, weights, strict=True)) / sum(
+            weights
+        )
+    raise ValueError(f"Unsupported video aggregation: {method}")
+
+
+def video_level_metrics(rows: list[dict[str, object]], *, threshold: float) -> dict[str, object]:
+    grouped: dict[str, list[dict[str, object]]] = defaultdict(list)
+    for row in rows:
+        sample_path = PurePosixPath(str(row["path"]))
+        parent = sample_path.parent.as_posix()
+        video_key = sample_path.as_posix() if parent == "." else parent
+        grouped[video_key].append(row)
+
+    output: dict[str, object] = {}
+    for method in AGGREGATIONS:
+        videos = []
+        for video_key, video_rows in sorted(grouped.items()):
+            evaluated = [row for row in video_rows if row["status"] == "evaluated"]
+            if not evaluated:
+                continue
+            labels = {int(row["label"]) for row in video_rows}
+            manipulations = {str(row["manipulation"]) for row in video_rows}
+            if len(labels) != 1 or len(manipulations) != 1:
+                raise ValueError(f"Inconsistent frame metadata for video {video_key!r}")
+            videos.append(
+                {
+                    "video": video_key,
+                    "label": labels.pop(),
+                    "manipulation": manipulations.pop(),
+                    "score": _aggregate_scores(
+                        [float(row["score"]) for row in evaluated], method
+                    ),
+                    "evaluated_frames": len(evaluated),
+                    "expected_frames": len(video_rows),
+                }
+            )
+        labels = [int(video["label"]) for video in videos]
+        scores = [float(video["score"]) for video in videos]
+        original_videos = [video for video in videos if video["manipulation"] == "original"]
+        by_manipulation = {}
+        for manipulation in sorted(
+            {str(video["manipulation"]) for video in videos if video["manipulation"] != "original"}
+        ):
+            comparison = original_videos + [
+                video for video in videos if video["manipulation"] == manipulation
+            ]
+            by_manipulation[manipulation] = binary_metrics(
+                [int(video["label"]) for video in comparison],
+                [float(video["score"]) for video in comparison],
+                threshold=threshold,
+            )
+        output[method] = {
+            "evaluated_videos": len(videos),
+            "videos_without_evaluated_frames": len(grouped) - len(videos),
+            "metrics": binary_metrics(labels, scores, threshold=threshold),
+            "metrics_by_manipulation": by_manipulation,
+        }
+    return output
+
+
 def _extract_record(
     record: VideoRecord, *, video_root: Path, frame_root: Path
 ) -> tuple[list[dict[str, str]], dict[str, object]]:
@@ -138,7 +218,9 @@ def _extract_record(
         relative_frame = Path(record.manipulation) / stem / f"frame_{frame_index:06d}.png"
         output_path = frame_root / relative_frame
         output_directory.mkdir(parents=True, exist_ok=True)
-        if not cv2.imwrite(str(output_path), image):
+        if not cv2.imwrite(
+            str(output_path), image, [cv2.IMWRITE_PNG_COMPRESSION, 1]
+        ):
             plan["failures"].append(f"write_error:{frame_index}")
             continue
         plan["decoded_frame_indexes"].append(frame_index)
@@ -162,9 +244,24 @@ def extract_frozen_frames(
     records = build_video_records(pairs)
     metadata_rows: list[dict[str, str]] = []
     video_plans: list[dict[str, object]] = []
-    for index, record in enumerate(records, start=1):
-        print(f"[{index:03d}/{len(records)}] {record.relative_path}", flush=True)
-        rows, plan = _extract_record(record, video_root=video_root, frame_root=frame_root)
+    extracted: dict[int, tuple[list[dict[str, str]], dict[str, object]]] = {}
+    with ProcessPoolExecutor(max_workers=4) as executor:
+        futures = {
+            executor.submit(
+                _extract_record,
+                record,
+                video_root=video_root,
+                frame_root=frame_root,
+            ): (index, record)
+            for index, record in enumerate(records)
+        }
+        for completed, future in enumerate(as_completed(futures), start=1):
+            index, record = futures[future]
+            extracted[index] = future.result()
+            print(f"[{completed:03d}/{len(records)}] {record.relative_path}", flush=True)
+
+    for index in range(len(records)):
+        rows, plan = extracted[index]
         metadata_rows.extend(rows)
         video_plans.append(plan)
 

@@ -5,7 +5,12 @@ from pathlib import Path
 import numpy as np
 
 from evaluation.deepfake.robustness import transform_image
-from evaluation.deepfake.video_metrics import build_video_records, fixed_frame_indexes
+from evaluation.deepfake.video_metrics import (
+    build_video_records,
+    fixed_frame_indexes,
+    video_level_metrics,
+)
+from scripts import download_model
 
 
 def test_fixed_frame_indexes_are_five_deterministic_interior_positions() -> None:
@@ -47,6 +52,53 @@ def test_resize_degradation_preserves_image_shape() -> None:
     assert transformed.shape == image.shape
 
 
+def test_video_level_metrics_group_frames_before_scoring() -> None:
+    rows = [
+        {
+            "path": "original/001/frame_1.png",
+            "label": 0,
+            "manipulation": "original",
+            "status": "evaluated",
+            "score": 0.1,
+        },
+        {
+            "path": "original/001/frame_2.png",
+            "label": 0,
+            "manipulation": "original",
+            "status": "evaluated",
+            "score": 0.2,
+        },
+        {
+            "path": "Deepfakes/001_002/frame_1.png",
+            "label": 1,
+            "manipulation": "Deepfakes",
+            "status": "evaluated",
+            "score": 0.8,
+        },
+        {
+            "path": "Deepfakes/001_002/frame_2.png",
+            "label": 1,
+            "manipulation": "Deepfakes",
+            "status": "no_face",
+            "score": "",
+        },
+    ]
+
+    results = video_level_metrics(rows, threshold=0.5)
+
+    assert results["mean"]["evaluated_videos"] == 2
+    assert results["mean"]["metrics"]["accuracy"] == 1
+    assert results["mean"]["metrics_by_manipulation"]["Deepfakes"]["roc_auc"] == 1
+
+
 def test_no_private_artifact_path_is_part_of_the_repository_contract() -> None:
     module_path = Path(__file__).parents[1]
     assert not (module_path / "results").exists()
+
+
+def test_checkpoint_download_is_pinned_to_the_approved_immutable_revision() -> None:
+    assert download_model.MODEL_REVISION == "db138ed0a70e96b087c155912cc1d306d9a97eec"
+    assert download_model.MODEL_REVISION in download_model.MODEL_URL
+    assert download_model.EXPECTED_SHA256 == (
+        "c5c2002b5ef6c7ee0c542d7d203e16386dc641b685859d8a58ac883b52c8e4c9"
+    )
