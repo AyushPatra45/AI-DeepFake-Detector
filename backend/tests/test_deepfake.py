@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 import torch
 from app.adapters import AnalysisContext
-from app.deepfake.adapter import DeepfakeAnalyzer, _candidate_images
+from app.deepfake.adapter import DeepfakeAnalyzer, _candidate_images, _model_warnings
 from app.deepfake.aggregation import softmax_weighted_score
 from app.deepfake.face import FaceCropper
 from app.deepfake.model import HybridDeepfakeDetector, RealFFT2D, SRMConv2d
@@ -212,8 +212,53 @@ def test_video_analysis_scores_all_faces_and_preserves_frame_association(
     assert runtime.calls == [(5, 2)]
     assert [frame.deepfake_probability for frame in frames] == probabilities
     assert result.findings["deepfake_probability"] == round(expected_score, 6)
-    assert result.findings["decision"] == "suspicious"
+    assert result.findings["decision"] == "evaluation_pending"
     assert result.findings["analysed_faces"] == 5
     assert result.findings["candidate_frames"] == 5
+    assert result.findings["face_coverage"] == 1.0
+    assert result.settings["threshold_enabled"] is False
+    assert result.settings["validation_status"] == "evaluation_pending"
+    assert "unvalidated" in result.warnings[0]
     assert [item["frame_index"] for item in result.findings["frame_scores"]] == list(range(5))
     assert result.settings["checkpoint_sha256"] == runtime.checkpoint_sha256
+
+
+def test_validated_checkpoint_enables_threshold_decision(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    checkpoint = tmp_path / "model.pth"
+    checkpoint.write_bytes(b"placeholder")
+    source = tmp_path / "image.png"
+    source.write_bytes(b"placeholder")
+    face = np.full((32, 32, 3), 128, dtype=np.uint8)
+    analyzer = DeepfakeAnalyzer(checkpoint_path=checkpoint, image_size=32, validated=True)
+    analyzer._runtime = _StubRuntime([0.9])
+    context = AnalysisContext(
+        job_id="job-validated",
+        source_path=source,
+        artifact_dir=tmp_path / "artifacts",
+        media=MediaInfo(media_type=MediaType.PNG, width=32, height=32),
+        frames=[],
+    )
+    monkeypatch.setattr("app.deepfake.adapter.cv2.imread", lambda *args, **kwargs: face)
+    monkeypatch.setattr(FaceCropper, "crop_largest", lambda *args, **kwargs: face)
+    monkeypatch.setattr("app.deepfake.adapter.save_diagnostics", lambda *args, **kwargs: [])
+
+    result = analyzer.analyse(context)
+
+    assert result.findings["decision"] == "suspicious"
+    assert result.settings["threshold_enabled"] is True
+    assert result.settings["validation_status"] == "validated"
+    assert all("unvalidated" not in warning for warning in result.warnings)
+
+
+def test_low_video_face_coverage_is_reported() -> None:
+    warnings = _model_warnings(
+        validated=False,
+        is_video=True,
+        analysed_faces=2,
+        candidate_frames=10,
+    )
+
+    assert any("only 2 of 10 sampled frames" in warning for warning in warnings)
+    assert any("not representative" in warning for warning in warnings)

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from time import perf_counter
 
 from app.adapters import AnalysisContext, ForensicAnalyzer
@@ -20,6 +21,12 @@ def process_job(
         job = repository.get(job_id)
         source_path = repository.source_path(job_id)
         started = perf_counter()
+        with source_path.open("rb") as source:
+            actual_sha256 = hashlib.file_digest(source, "sha256").hexdigest()
+        if actual_sha256 != job.sha256:
+            raise ValueError(
+                "Source integrity check failed: SHA-256 differs from uploaded evidence"
+            )
         inspected = inspect_media(
             source_path,
             job.media_type,

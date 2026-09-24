@@ -53,6 +53,7 @@ def test_image_analysis_and_reports(client: TestClient) -> None:
     assert payload["result"]["media"]["height"] == 16
     assert [module["module"] for module in payload["result"]["modules"]] == [
         "platform_ingestion",
+        "media_authenticity",
         "deepfake_detection",
         "image_forensics",
     ]
