@@ -33,5 +33,13 @@ jobs:
       - name: Run tests
         run: python -m pytest
 
+      - name: Set up Node for frontend regression checks
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check frontend results
+        run: node --test frontend/results.test.cjs
+
       - name: Check patch whitespace
         run: git diff --check

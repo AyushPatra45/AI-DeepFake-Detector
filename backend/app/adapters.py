@@ -43,10 +43,12 @@ class UnavailableAnalyzer:
 
 
 def default_analyzers() -> list[ForensicAnalyzer]:
+    from app.authenticity.adapter import MediaAuthenticityAnalyzer
     from app.deepfake.adapter import DeepfakeAnalyzer
     from app.forensics.adapter import ImageForensicsAnalyzer
 
     return [
+        MediaAuthenticityAnalyzer(),
         DeepfakeAnalyzer.from_env(),
         ImageForensicsAnalyzer(),
     ]

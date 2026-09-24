@@ -132,8 +132,13 @@ def test_client_validation_and_interpretation_boundaries_are_present() -> None:
     assert "SUPPORTED_MEDIA_TYPES" in JAVASCRIPT
     assert "MAX_UPLOAD_BYTES" in JAVASCRIPT
     assert "Unsupported format" in JAVASCRIPT
-    assert "risk indicator, not proof" in JAVASCRIPT
+    assert "Strong AI-origin evidence" in JAVASCRIPT
+    assert "No known watermark or provenance marker" in JAVASCRIPT
+    assert "Face-manipulation model score" in HTML
     assert "Supported LSB payload" in HTML
+    for signal_id in ("modelSignal", "originSignal", "elaSignal", "lsbSignal"):
+        assert element_by_id(signal_id)
+    assert "Neither measure is a fake probability" in JAVASCRIPT
 
 
 def test_document_ids_are_unique() -> None:

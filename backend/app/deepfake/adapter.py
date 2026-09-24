@@ -20,10 +20,12 @@ class DeepfakeAnalyzer:
     checkpoint_path: Path
     image_size: int = 512
     batch_size: int = 4
+    validated: bool = False
     name: str = "deepfake_detection"
-    version: str = "dual-stream-0.1.0"
+    version: str = "dual-stream-0.2.0"
     _runtime: ModelRuntime | None = field(default=None, init=False, repr=False)
     _lock: Lock = field(default_factory=Lock, init=False, repr=False)
+    _analysis_lock: Lock = field(default_factory=Lock, init=False, repr=False)
 
     @classmethod
     def from_env(cls) -> DeepfakeAnalyzer:
@@ -33,9 +35,16 @@ class DeepfakeAnalyzer:
             ).resolve(),
             image_size=int(os.getenv("APP_DEEPFAKE_IMAGE_SIZE", "512")),
             batch_size=int(os.getenv("APP_DEEPFAKE_BATCH_SIZE", "4")),
+            validated=os.getenv("APP_DEEPFAKE_VALIDATED", "false").lower()
+            in {"1", "true", "yes"},
         )
 
     def analyse(self, context: AnalysisContext) -> ModuleResult:
+        # Grad-CAM installs hooks and changes gradients on the shared model.
+        with self._analysis_lock:
+            return self._analyse(context)
+
+    def _analyse(self, context: AnalysisContext) -> ModuleResult:
         if not self.checkpoint_path.is_file():
             return ModuleResult(
                 module=self.name,
@@ -81,6 +90,10 @@ class DeepfakeAnalyzer:
             if context.media.media_type.is_video
             else probabilities[0]
         )
+        face_coverage = len(faces) / len(candidates) if candidates else 0.0
+        decision = (
+            "suspicious" if score >= runtime.threshold else "lower_risk"
+        ) if self.validated else "evaluation_pending"
         top_index = max(range(len(probabilities)), key=probabilities.__getitem__)
         artifacts = save_diagnostics(
             runtime,
@@ -104,22 +117,27 @@ class DeepfakeAnalyzer:
                 "image_size": self.image_size,
                 "batch_size": self.batch_size,
                 "threshold": runtime.threshold,
+                "threshold_enabled": self.validated,
+                "validation_status": "validated" if self.validated else "evaluation_pending",
                 "calibration_temperature": runtime.temperature,
                 "video_aggregation": "softmax_weighted_tau_0.1",
                 "checkpoint_sha256": runtime.checkpoint_sha256,
             },
             findings={
                 "deepfake_probability": round(score, 6),
-                "decision": "suspicious" if score >= runtime.threshold else "lower_risk",
+                "decision": decision,
                 "analysed_faces": len(faces),
                 "candidate_frames": len(candidates),
+                "face_coverage": round(face_coverage, 6),
                 "frame_scores": frame_scores,
             },
             artifacts=artifacts,
-            warnings=[
-                "Deepfake probability is model-dependent and may not generalise to unseen "
-                "generators, heavy blur, or out-of-distribution media."
-            ],
+            warnings=_model_warnings(
+                validated=self.validated,
+                is_video=context.media.media_type.is_video,
+                analysed_faces=len(faces),
+                candidate_frames=len(candidates),
+            ),
         )
 
     def _get_runtime(self) -> ModelRuntime:
@@ -136,3 +154,25 @@ def _candidate_images(context: AnalysisContext) -> list[tuple[Path, object | Non
     return [
         (context.artifact_dir / Path(frame.artifact.path).name, frame) for frame in context.frames
     ]
+
+
+def _model_warnings(
+    *, validated: bool, is_video: bool, analysed_faces: int, candidate_frames: int
+) -> list[str]:
+    warnings = []
+    if not validated:
+        warnings.append(
+            "This checkpoint has not completed the project's frozen-dataset evaluation. "
+            "Treat the value as an unvalidated face-manipulation model score, not the "
+            "probability that the media is AI-generated."
+        )
+    warnings.append(
+        "The model is face-focused and may not generalise to fully synthetic media, unseen "
+        "generators, heavy blur, profile faces, or other out-of-distribution content."
+    )
+    if is_video and candidate_frames and analysed_faces < candidate_frames:
+        warnings.append(
+            f"A frontal face was detected in only {analysed_faces} of {candidate_frames} "
+            "sampled frames; the video score is not representative of the full video."
+        )
+    return warnings

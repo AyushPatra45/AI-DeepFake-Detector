@@ -136,14 +136,19 @@ async function pollJob(jobId) {
 
 function resetResult() {
   byId("caseFile").textContent = "";
+  byId("scoreLabel").textContent = "Face-manipulation model score";
   byId("riskScore").textContent = "Unavailable";
+  byId("riskScore").className = "";
   byId("riskDecision").textContent = "Not evaluated";
   byId("riskDecision").className = "risk-badge neutral";
-  byId("riskHelp").textContent = "A model risk indicator, not proof that media is authentic or manipulated.";
+  byId("riskHelp").textContent = "Watermark, provenance, model and forensic signals are reported separately.";
   byId("mediaSummary").textContent = "—";
   byId("frameSummary").textContent = "0";
   byId("lsbSummary").textContent = "Not detected";
   byId("statusSummary").textContent = "—";
+  for (const id of ["modelSignal", "originSignal", "elaSignal", "lsbSignal"]) {
+    byId(id).replaceChildren();
+  }
   byId("moduleList").replaceChildren();
   byId("warningList").replaceChildren();
   byId("artifactGrid").replaceChildren();
@@ -171,30 +176,112 @@ function renderResult(job) {
   byId("reportActions").hidden = false;
 
   const deepfake = result.modules.find((module) => module.module === "deepfake_detection");
+  const authenticity = result.modules.find((module) => module.module === "media_authenticity");
   const forensics = result.modules.find((module) => module.module === "image_forensics");
   const probability = deepfake?.findings?.deepfake_probability;
   const decision = deepfake?.findings?.decision;
-  byId("riskScore").textContent = probability == null ? "Unavailable" : formatPercent(probability);
+  const assessment = authenticity?.findings?.assessment;
+  const watermark = authenticity?.findings?.visible_watermark;
+  const score = byId("riskScore");
   const riskBadge = byId("riskDecision");
-  riskBadge.textContent = decision ? decision.replaceAll("_", " ") : "Not evaluated";
-  riskBadge.className = `risk-badge ${decision || "neutral"}`;
-  byId("riskHelp").textContent = probability == null
-    ? "The face-focused model was not evaluated. Other forensic findings may still be available."
-    : "This calibrated model score is a risk indicator, not proof that media is authentic or manipulated.";
-  byId("frameSummary").textContent = deepfake?.findings?.analysed_faces ?? result.frames.length;
-  byId("lsbSummary").textContent = forensics?.findings?.lsb?.supported_payload_detected
-    ? "Extracted safely"
-    : "Not detected";
+  if (authenticity?.status === "completed" && watermark?.candidate_detected) {
+    byId("scoreLabel").textContent = "AI-origin signal";
+    score.textContent = "Strong AI-origin evidence";
+    score.className = "assessment-text";
+    riskBadge.textContent = watermark?.candidate_detected ? "Visible watermark detected" : "Provenance marker detected";
+    riskBadge.className = "risk-badge strong_evidence";
+    byId("riskHelp").textContent = watermark?.candidate_detected
+      ? "A persistent generator-style watermark was found. Verify invisible SynthID separately for provider attribution."
+      : "File-level provenance markers were found. Signature validation is still required.";
+  } else if (authenticity?.status === "completed" && authenticity?.findings?.provenance?.ai_origin_claim_detected) {
+    score.textContent = probability == null ? "Unavailable" : formatPercent(probability);
+    riskBadge.textContent = "Unverified AI-origin claim";
+    riskBadge.className = "risk-badge evaluation_pending";
+    byId("riskHelp").textContent = "File text mentions AI generation, but its signature is unverified. The face-model score is a separate measurement, not proof of origin.";
+  } else if (assessment === "inconclusive" && probability != null) {
+    score.textContent = formatPercent(probability);
+    riskBadge.textContent = "Origin not confirmed";
+    riskBadge.className = "risk-badge evaluation_pending";
+    byId("riskHelp").textContent = "No known watermark or provenance marker was found. This unvalidated face-model score is not the probability that the whole image or video is AI-generated.";
+  } else if (assessment === "inconclusive") {
+    score.textContent = "Unavailable";
+    riskBadge.textContent = "Origin not confirmed";
+    riskBadge.className = "risk-badge evaluation_pending";
+    byId("riskHelp").textContent = "No known watermark or provenance marker was found, and no face-model score was produced. This does not prove the media is real.";
+  } else {
+    score.textContent = probability == null ? "Unavailable" : formatPercent(probability);
+    riskBadge.textContent = decision ? decision.replaceAll("_", " ") : "Not evaluated";
+    riskBadge.className = `risk-badge ${decision || "neutral"}`;
+    byId("riskHelp").textContent = "Authenticity analysis was unavailable; review individual module warnings.";
+  }
+  byId("frameSummary").textContent = deepfake?.findings?.analysed_faces ?? "Not evaluated";
+  const lsb = forensics?.findings?.lsb;
+  byId("lsbSummary").textContent = lsb
+    ? (lsb.supported_payload_detected ? "Extracted safely" : "Not detected")
+    : "Not evaluated";
   const media = result.media;
   byId("mediaSummary").textContent = media.duration_seconds == null
     ? `${media.width} × ${media.height}`
     : `${media.duration_seconds.toFixed(1)} s · ${media.width} × ${media.height}`;
 
+  renderSignals(deepfake, authenticity, forensics, media);
   renderModules(result.modules);
   renderWarnings(result);
   renderArtifacts(result.modules);
   renderFrames(result.frames);
   byId("resultHeading").focus();
+}
+
+function setSignal(id, value, note) {
+  const valueElement = document.createElement("strong");
+  valueElement.textContent = value;
+  const noteElement = document.createElement("span");
+  noteElement.textContent = note;
+  byId(id).replaceChildren(valueElement, noteElement);
+}
+
+function renderSignals(deepfake, authenticity, forensics, media) {
+  const probability = deepfake?.findings?.deepfake_probability;
+  setSignal(
+    "modelSignal",
+    probability == null ? "No score" : formatPercent(probability),
+    "Unvalidated score for facial manipulation patterns, not whole-media AI probability."
+  );
+
+  const watermark = authenticity?.findings?.visible_watermark;
+  const provenance = authenticity?.findings?.provenance;
+  if (!authenticity || authenticity.status !== "completed") {
+    setSignal("originSignal", "Not evaluated", "Origin-marker analysis was unavailable.");
+  } else if (watermark?.candidate_detected) {
+    setSignal("originSignal", "Visible watermark candidate", "Strong AI-origin lead; confirm provider attribution separately.");
+  } else if (provenance?.ai_origin_claim_detected) {
+    setSignal("originSignal", "AI-origin claim found", "File claim is not signature-verified.");
+  } else {
+    setSignal("originSignal", "No known marker found", "Absence does not establish authenticity.");
+  }
+
+  const ela = forensics?.findings?.ela;
+  if (ela) {
+    setSignal(
+      "elaSignal",
+      `${Number(ela.mean_error).toFixed(2)} mean error · ${formatPercent(ela.highlighted_pixel_ratio)} highlighted`,
+      "JPEG recompression difference; inspect the heatmap. Neither measure is a fake probability."
+    );
+  } else {
+    setSignal("elaSignal", "Not applied", media.duration_seconds == null
+      ? "ELA was not available for this image."
+      : "Video compression changes this signal.");
+  }
+
+  const lsb = forensics?.findings?.lsb;
+  if (lsb?.supported_payload_detected) {
+    setSignal("lsbSignal", `${lsb.extracted_size_bytes} bytes extracted`, "Supported LSB layout; payload retained as inert bytes.");
+  } else {
+    setSignal("lsbSignal", lsb ? "No supported payload" : "Not evaluated",
+      lsb ? "Other steganography methods may still exist."
+        : media.duration_seconds == null ? "LSB analysis was unavailable for this image."
+          : "LSB extraction is for still images.");
+  }
 }
 
 function renderModules(modules) {
@@ -203,10 +290,30 @@ function renderModules(modules) {
   modules.forEach((module) => {
     const row = document.createElement("article");
     row.className = "module-row";
-    const findingText = Object.entries(module.findings || {})
-      .filter(([, value]) => ["string", "number", "boolean"].includes(typeof value))
-      .map(([key, value]) => `${key.replaceAll("_", " ")}: ${value}`)
-      .join(" · ") || `Version ${module.version}`;
+    let findingText = Object.entries(module.findings || {})
+      .filter(([key, value]) => !["assessment", "decision"].includes(key)
+        && ["string", "number", "boolean"].includes(typeof value))
+      .map(([key, value]) => {
+        const label = key === "deepfake_probability"
+          ? "face manipulation model score"
+          : key.replaceAll("_", " ");
+        return `${label}: ${key === "deepfake_probability" && value != null ? formatPercent(value) : value}`;
+      })
+      .join(" · ");
+    if (module.status !== "completed") {
+      findingText = (module.warnings || []).join(" ") || "No findings were produced.";
+    } else if (module.module === "media_authenticity") {
+      findingText = module.findings?.visible_watermark?.candidate_detected
+        ? "Visible watermark candidate detected"
+        : module.findings?.provenance?.ai_origin_claim_detected
+          ? "AI-origin claim found; signature not verified"
+          : "No known watermark or provenance marker found";
+    } else if (module.module === "image_forensics") {
+      findingText = module.findings?.ela
+        ? "ELA heatmap and LSB inspection available above"
+        : "Video metadata inspected; ELA and LSB not applied";
+    }
+    findingText ||= `Version ${module.version}`;
     row.innerHTML = `
       <div class="module-name">${escapeText(module.module.replaceAll("_", " "))}</div>
       <span class="module-state ${escapeText(module.status)}">${escapeText(module.status)}</span>

@@ -1,6 +1,15 @@
 # Team Implementation Status
 
-Status date: 20 September 2026
+Status date: 24 September 2026
+
+## Current completion pass
+
+Origin signals, honest score presentation, source hash verification, bounded watermark
+memory, serialized model diagnostics and a free-port local launcher are implemented on
+`codex/forensics-completion-fixes` by Ayush with Codex assistance. See
+[Completion handoff](COMPLETION_HANDOFF.md). These changes are not yet recorded as merged.
+Palak has claimed P-03 after official access and protocol approval; the absence of
+published metrics, rather than access approval, is the remaining evaluation gap.
 
 ## Authorship note
 

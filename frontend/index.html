@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Deepfake and steganography forensic analysis workspace" />
     <title>AI-Powered Deepfake &amp; Steganography Forensics</title>
-    <link rel="stylesheet" href="/static/styles.css" />
+    <link rel="stylesheet" href="/static/styles.css?v=4" />
   </head>
   <body>
     <a class="skip-link" href="#workspace">Skip to workspace</a>
@@ -112,16 +112,16 @@
 
             <div class="summary-strip">
               <div class="risk-summary">
-                <span class="score-label">Deepfake probability</span>
+                <span class="score-label" id="scoreLabel">Face-manipulation model score</span>
                 <strong id="riskScore">Unavailable</strong>
                 <span class="risk-badge neutral" id="riskDecision">Not evaluated</span>
                 <p class="risk-help" id="riskHelp">
-                  A model risk indicator, not proof that media is authentic or manipulated.
+                  Watermark, provenance, model and forensic signals are reported separately.
                 </p>
               </div>
               <dl class="evidence-summary">
                 <div><dt>Media</dt><dd id="mediaSummary">—</dd></div>
-                <div><dt>Frames analysed</dt><dd id="frameSummary">0</dd></div>
+                <div><dt>Faces analysed</dt><dd id="frameSummary">0</dd></div>
                 <div><dt>Supported LSB payload</dt><dd id="lsbSummary">Not detected</dd></div>
                 <div><dt>Status</dt><dd id="statusSummary">—</dd></div>
               </dl>
@@ -147,6 +147,15 @@
 
             <div class="tab-panel active" id="overviewPanel" role="tabpanel"
                  aria-labelledby="overviewTab" tabindex="0">
+              <section class="signal-breakdown" aria-labelledby="signalHeading">
+                <h3 id="signalHeading">Signal breakdown</h3>
+                <dl class="signal-list">
+                  <div><dt>Face model</dt><dd id="modelSignal">Not evaluated</dd></div>
+                  <div><dt>Watermark / provenance</dt><dd id="originSignal">Not evaluated</dd></div>
+                  <div><dt>Error level analysis</dt><dd id="elaSignal">Not evaluated</dd></div>
+                  <div><dt>LSB extraction</dt><dd id="lsbSignal">Not evaluated</dd></div>
+                </dl>
+              </section>
               <div class="module-list" id="moduleList"></div>
               <div class="warning-list" id="warningList"></div>
             </div>
@@ -163,7 +172,7 @@
                     <tr>
                       <th scope="col">Frame</th>
                       <th scope="col">Timestamp</th>
-                      <th scope="col">Deepfake probability</th>
+                      <th scope="col">Face-manipulation score</th>
                       <th scope="col">Evidence</th>
                     </tr>
                   </thead>
@@ -197,6 +206,6 @@
       </main>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
-    <script src="/static/app.js" defer></script>
+    <script src="/static/app.js?v=7" defer></script>
   </body>
 </html>

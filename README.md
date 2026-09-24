@@ -104,18 +104,21 @@ python3.11 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e '.[dev]'
 python scripts/download_model.py
-uvicorn app.main:app --app-dir backend --reload
+python scripts/run_local.py
 ```
 
-Open `http://127.0.0.1:8000` for the forensic workspace or `/docs` for the
+Open the URL printed by the launcher (starting at `http://127.0.0.1:8000`) or `/docs` for the
 interactive API. Runtime uploads, artifacts, reports, and SQLite data are written
 under `runtime/` by default.
+The launcher uses the next free port if another service already occupies port 8000.
+Use `python scripts/run_local.py --port 8010` to start searching at another port.
 
 Run verification with:
 
 ```bash
 pytest
 ruff check backend evaluation scripts
+node --test frontend/results.test.cjs
 ```
 
 Create the licence-safe ELA and LSB demonstration media with:
@@ -132,6 +135,13 @@ The integrated implementations live under `backend/app/deepfake/` and
 typed `ModuleResult`, keeping failures isolated while preserving available evidence.
 
 ## Scope statement
+
+The result view preserves the face-model percentage separately from ELA, LSB and
+origin signals. The published checkpoint remains evaluation-pending by default;
+showing its score does not make it a calibrated probability of AI generation.
+Visible sparkle matching is a heuristic candidate detector, not a SynthID verifier.
+Raw AI-origin metadata text is explicitly unverified and cannot establish authenticity.
+See [completion handoff](docs/COMPLETION_HANDOFF.md) for remaining acceptance evidence.
 
 This is an academic, fully functional prototype. It is designed to surface forensic
 risk indicators and supporting evidence. It is not a universal authenticity oracle,
