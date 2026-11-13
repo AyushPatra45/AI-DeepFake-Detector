@@ -22,6 +22,13 @@ Palak or Ayana and are not marked merged until reviewed on GitHub.
 
 ## What remains and who does it
 
+November 14 follow-up: capped video analysis now samples across the full duration
+rather than only the beginning. Frame counts remain bounded and timestamps are
+estimated from frame index and nominal FPS. The model and its threshold are
+unchanged, so wider coverage is not a measured accuracy improvement. Optional
+diagnostic failures no longer discard model scores. The workspace now previews
+selected media, exposes metadata, and can search and filter its 100 most recent cases.
+
 1. Palak: finish the claimed P-03 evaluation on the approved private FaceForensics++
    c23 corpus. Follow the corrected frozen 70-pair protocol in Issue #7; do not
    re-split the official test set or tune thresholds on it. Publish reviewed
@@ -46,11 +53,16 @@ capabilities of this prototype.
 
 ## Run and verify
 
-Local verification: 96 Python tests and four Node result-rendering tests pass; Ruff
+Local verification: 99 Python tests and seven Node frontend tests pass; Ruff
 and whitespace checks pass. A fresh server accepted a synthetic no-face image,
 verified its source hash, completed the available forensic modules and exported JSON
 and PDF successfully. The no-face skip was confirmed in the desktop browser.
 One existing Starlette/httpx deprecation warning remains in the test dependencies.
+
+The local suite includes capped video sampling, preservation of scores after a
+diagnostic failure, and exact recovery for the documented known-seed LSB format.
+See `docs/FORENSICS_EVALUATION.md` for the offline recovery command. The default
+web scan does not recover arbitrary keyed layouts.
 
 From the repository, with the environment activated:
 

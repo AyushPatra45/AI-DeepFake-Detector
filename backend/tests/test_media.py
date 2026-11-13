@@ -42,12 +42,15 @@ def test_video_sampling_preserves_timestamps_and_limit(tmp_path: Path) -> None:
     assert inspected.info.width == 32
     assert inspected.info.height == 24
     assert inspected.info.duration_seconds == pytest.approx(2.0, abs=0.2)
-    assert [frame.timestamp_seconds for frame in inspected.frames] == [0.0, 0.5, 1.0]
+    assert [frame.frame_index for frame in inspected.frames] == [0, 10, 19]
+    assert [frame.timestamp_seconds for frame in inspected.frames] == [0.0, 1.0, 1.9]
     assert all(
         (tmp_path / "frames" / Path(frame.artifact.path).name).exists()
         for frame in inspected.frames
     )
-    assert inspected.warnings == ["Sampling stopped at the configured limit of 3 frames"]
+    assert inspected.warnings == ["Sampling limited to 3 frames across the video duration"]
+    last = cv2.imread(str(tmp_path / "frames" / Path(inspected.frames[-1].artifact.path).name))
+    assert last is not None and last.mean() > 160
 
 
 def test_image_pixel_limit_is_enforced_before_analysis(tmp_path: Path) -> None:

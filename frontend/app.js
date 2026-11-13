@@ -1,4 +1,7 @@
-const state = { currentJob: null, pollTimer: null, toastTimer: null };
+const state = {
+  currentJob: null, pollTimer: null, toastTimer: null, previewUrl: null,
+  analysisBusy: false, historyJobs: null, historyError: false, historyLoading: false,
+};
 
 const MAX_UPLOAD_BYTES = 500 * 1024 * 1024;
 const SUPPORTED_MEDIA_TYPES = new Set([
@@ -36,11 +39,38 @@ function showToast(message) {
 }
 
 function resetFileSelection() {
+  resetPreview();
   const input = byId("mediaFile");
   input.value = "";
   byId("dropTitle").textContent = "Choose image or video";
   byId("dropMeta").textContent = "Maximum 500 MB";
   byId("analyseButton").disabled = true;
+}
+
+function resetPreview() {
+  if (state.previewUrl) URL.revokeObjectURL(state.previewUrl);
+  state.previewUrl = null;
+  for (const id of ["imagePreview", "videoPreview"]) {
+    const preview = byId(id);
+    preview.hidden = true;
+    preview.removeAttribute("src");
+  }
+  byId("videoPreview").load();
+  byId("dropZone").classList.remove("has-preview");
+}
+
+function previewFile(file) {
+  resetPreview();
+  state.previewUrl = URL.createObjectURL(file);
+  const isVideo = file.type.startsWith("video/") || /\.(mp4|mov)$/i.test(file.name);
+  const preview = byId(isVideo ? "videoPreview" : "imagePreview");
+  preview.src = state.previewUrl;
+  preview.hidden = false;
+  preview.onerror = () => {
+    preview.hidden = true;
+    byId("dropZone").classList.remove("has-preview");
+  };
+  byId("dropZone").classList.add("has-preview");
 }
 
 function validateFile(file) {
@@ -54,6 +84,7 @@ function validateFile(file) {
 }
 
 function selectFile(file, assignToInput = false) {
+  if (state.analysisBusy) return false;
   const input = byId("mediaFile");
   const validationError = validateFile(file);
   if (validationError) {
@@ -69,22 +100,30 @@ function selectFile(file, assignToInput = false) {
   }
   byId("dropTitle").textContent = file.name;
   byId("dropMeta").textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+  previewFile(file);
   byId("analyseButton").disabled = false;
   return true;
 }
 
 function setAnalysisBusy(busy) {
+  state.analysisBusy = busy;
   const form = byId("uploadForm");
   const button = byId("analyseButton");
   form.setAttribute("aria-busy", String(busy));
+  byId("mediaFile").disabled = busy;
   button.disabled = busy || !byId("mediaFile").files.length;
-  button.textContent = busy ? "Analysing media" : "Start forensic analysis";
+  byId("analyseLabel").textContent = busy ? "Analysing media" : "Start forensic analysis";
 }
 
 async function submitAnalysis(event) {
   event.preventDefault();
+  if (state.analysisBusy) return;
   const file = byId("mediaFile").files[0];
-  if (!selectFile(file)) return;
+  const validationError = validateFile(file);
+  if (validationError) {
+    showToast(validationError);
+    return;
+  }
 
   const form = new FormData();
   form.append("file", file);
@@ -122,7 +161,8 @@ async function pollJob(jobId) {
     setProgress(job.status.replaceAll("_", " "), job.id, progress[job.status] || 50);
     if (["completed", "partially_completed", "failed"].includes(job.status)) {
       setAnalysisBusy(false);
-      renderResult(job);
+      if (!byId("analysisView").hidden) renderResult(job);
+      else showToast(`Analysis ${job.status.replaceAll("_", " ")}. Open the case from history.`);
       loadHistory();
       return;
     }
@@ -153,6 +193,7 @@ function resetResult() {
   byId("warningList").replaceChildren();
   byId("artifactGrid").replaceChildren();
   byId("frameTable").replaceChildren();
+  byId("metadataList").replaceChildren();
   byId("reportActions").hidden = true;
   activateTab(byId("overviewTab"));
 }
@@ -167,8 +208,12 @@ function renderResult(job) {
   byId("statusSummary").textContent = job.status.replaceAll("_", " ");
 
   if (!result) {
-    byId("warningList").innerHTML = `<div class="warning">${escapeText(job.error || "Analysis failed")}</div>`;
-    byId("riskHelp").textContent = "No model result was produced. Review the failure message and try a supported file.";
+    const pending = ["queued", "processing"].includes(job.status);
+    const message = pending ? "Analysis is still running." : job.error || "Analysis failed.";
+    byId("warningList").innerHTML = `<div class="warning">${escapeText(message)}</div>`;
+    byId("riskHelp").textContent = pending
+      ? "Refresh case history to check for results."
+      : "No model result was produced. Review the failure message and try a supported file.";
     byId("resultHeading").focus();
     return;
   }
@@ -225,11 +270,33 @@ function renderResult(job) {
     : `${media.duration_seconds.toFixed(1)} s · ${media.width} × ${media.height}`;
 
   renderSignals(deepfake, authenticity, forensics, media);
+  renderMetadata(forensics?.findings?.metadata);
   renderModules(result.modules);
   renderWarnings(result);
   renderArtifacts(result.modules);
   renderFrames(result.frames);
   byId("resultHeading").focus();
+}
+
+function renderMetadata(metadata) {
+  const container = byId("metadataList");
+  container.replaceChildren();
+  const rows = Object.entries(metadata || {}).flatMap(([key, value]) => {
+    if (value && typeof value === "object") {
+      return Object.entries(value).map(([tag, detail]) => [`${key} / ${tag}`, detail]);
+    }
+    return [[key, value]];
+  });
+  if (!rows.length) rows.push(["Metadata", "No metadata available for this case"]);
+  rows.forEach(([key, value]) => {
+    const row = document.createElement("div");
+    const term = document.createElement("dt");
+    const detail = document.createElement("dd");
+    term.textContent = key.replaceAll("_", " ");
+    detail.textContent = typeof value === "object" ? JSON.stringify(value) : String(value ?? "Unavailable");
+    row.append(term, detail);
+    container.append(row);
+  });
 }
 
 function setSignal(id, value, note) {
@@ -373,24 +440,57 @@ function renderFrames(frames) {
 
 async function loadHistory() {
   const table = byId("historyTable");
+  if (state.historyLoading) return;
+  state.historyLoading = true;
+  byId("refreshHistory").disabled = true;
   table.setAttribute("aria-busy", "true");
+  if (state.historyJobs == null) {
+    table.innerHTML = '<tr><td class="empty-cell" colspan="5">Loading cases…</td></tr>';
+  }
   try {
     const payload = await api("/api/v1/analyses?limit=100");
-    table.replaceChildren();
-    if (!payload.jobs.length) {
-      table.innerHTML = '<tr><td class="empty-cell" colspan="5">No analysis cases.</td></tr>';
-      return;
-    }
-    payload.jobs.forEach((job) => {
-      const row = document.createElement("tr");
-      const status = job.status.replaceAll("_", " ");
-      row.innerHTML = `<td>${escapeText(job.source_name)}</td><td>${new Date(job.created_at).toLocaleString()}</td><td>${escapeText(job.media_type)}</td><td>${escapeText(status)}</td><td><button class="case-button" type="button" data-job="${job.id}" aria-label="Open ${escapeText(job.source_name)} case, status ${escapeText(status)}">${job.id.slice(0, 8)}</button></td>`;
-      table.append(row);
-    });
-  } catch (error) {
-    showToast(error.message);
+    state.historyJobs = payload.jobs;
+    state.historyError = false;
+  } catch {
+    state.historyError = true;
   } finally {
+    state.historyLoading = false;
+    byId("refreshHistory").disabled = false;
     table.setAttribute("aria-busy", "false");
+    renderHistory();
+  }
+}
+
+function filterHistory(jobs, query, status) {
+  const needle = query.trim().toLowerCase();
+  return jobs.filter((job) =>
+    (!status || job.status === status) &&
+    (!needle || job.source_name.toLowerCase().includes(needle) || job.id.toLowerCase().includes(needle))
+  );
+}
+
+function renderHistory() {
+  if (state.historyJobs == null && !state.historyError) return;
+  const table = byId("historyTable");
+  const jobs = state.historyJobs ?? [];
+  const matches = filterHistory(jobs, byId("historySearch").value, byId("historyStatus").value);
+  table.replaceChildren();
+  byId("historyCount").textContent = state.historyError
+    ? "Could not refresh cases"
+    : `${matches.length} of ${jobs.length} cases`;
+  if (!matches.length) {
+    const message = state.historyError ? "Could not load cases. Select Refresh to retry."
+      : jobs.length ? "No matching cases." : "No analysis cases.";
+    table.innerHTML = `<tr><td class="empty-cell" colspan="5">${message}</td></tr>`;
+    return;
+  }
+  for (const job of matches) {
+    const row = document.createElement("tr");
+    const status = job.status.replaceAll("_", " ");
+    const tone = job.status === "completed" ? "completed"
+      : job.status === "failed" ? "failed" : job.status === "partially_completed" ? "partial" : "";
+    row.innerHTML = `<td>${escapeText(job.source_name)}</td><td>${new Date(job.created_at).toLocaleString()}</td><td>${escapeText(job.media_type)}</td><td><span class="module-state ${tone}">${escapeText(status)}</span></td><td><button class="case-button" type="button" data-job="${escapeText(job.id)}" aria-label="Open ${escapeText(job.source_name)} case, status ${escapeText(status)}">${escapeText(job.id.slice(0, 8))}</button></td>`;
+    table.append(row);
   }
 }
 
@@ -468,6 +568,8 @@ function initialiseEvents() {
     });
   });
   byId("refreshHistory").addEventListener("click", loadHistory);
+  byId("historySearch").addEventListener("input", renderHistory);
+  byId("historyStatus").addEventListener("change", renderHistory);
   byId("historyTable").addEventListener("click", async (event) => {
     const button = event.target.closest("[data-job]");
     if (!button) return;
@@ -480,6 +582,7 @@ function initialiseEvents() {
 }
 
 async function initialise() {
+  if (typeof lucide !== "undefined") lucide.createIcons();
   initialiseEvents();
   try {
     const health = await api("/health");

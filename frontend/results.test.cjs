@@ -8,7 +8,7 @@ function screen() {
   function element() {
     return { textContent: '', className: '', children: [], hidden: false,
       replaceChildren(...children) { this.children = children; },
-      append(child) { this.children.push(child); }, focus() {} };
+      append(...children) { this.children.push(...children); }, focus() {} };
   }
   const context = vm.createContext({ document: {
     getElementById(id) {
@@ -69,4 +69,36 @@ test('failed modules and no face cannot claim a negative or a sampled-face count
   assert.equal(ui.get('originSignal').children[0].textContent, 'Not evaluated');
   assert.equal(ui.get('riskScore').textContent, 'Unavailable');
   assert.doesNotMatch(ui.get('moduleList').children[0].innerHTML, /No known watermark/);
+});
+
+test('metadata preserves untrusted EXIF as text and handles older cases', () => {
+  const ui = screen();
+  ui.context.metadata = { format: 'JPEG', exif: { Software: '<img src=x onerror=alert(1)>' } };
+  vm.runInContext('renderMetadata(metadata)', ui.context);
+  const rows = ui.get('metadataList').children;
+  assert.equal(rows.length, 2);
+  assert.equal(rows[1].children[0].textContent, 'exif / Software');
+  assert.equal(rows[1].children[1].textContent, '<img src=x onerror=alert(1)>');
+  vm.runInContext('renderMetadata(undefined)', ui.context);
+  assert.equal(ui.get('metadataList').children[0].children[1].textContent, 'No metadata available for this case');
+});
+
+test('history combines case ID or filename search with status', () => {
+  const ui = screen();
+  ui.context.jobs = [
+    { id: 'ab12', source_name: 'Clip.MOV', status: 'completed' },
+    { id: 'ab34', source_name: 'Image.PNG', status: 'failed' },
+  ];
+  const ids = expression => Array.from(vm.runInContext(expression, ui.context), item => item.id);
+  assert.deepEqual(ids('filterHistory(jobs, " CLIP ", "")'), ['ab12']);
+  assert.deepEqual(ids('filterHistory(jobs, "AB", "failed")'), ['ab34']);
+  assert.deepEqual(ids('filterHistory(jobs, "clip", "failed")'), []);
+});
+
+test('opening an unfinished case does not report failure', () => {
+  const ui = screen();
+  ui.context.job = { ...job(), status: 'processing', result: null };
+  vm.runInContext('renderResult(job)', ui.context);
+  assert.match(ui.get('warningList').innerHTML, /still running/);
+  assert.equal(ui.get('reportActions').hidden, true);
 });

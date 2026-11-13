@@ -95,12 +95,24 @@ class DeepfakeAnalyzer:
             "suspicious" if score >= runtime.threshold else "lower_risk"
         ) if self.validated else "evaluation_pending"
         top_index = max(range(len(probabilities)), key=probabilities.__getitem__)
-        artifacts = save_diagnostics(
-            runtime,
-            faces[top_index],
-            artifact_dir=context.artifact_dir,
-            job_id=context.job_id,
+        warnings = _model_warnings(
+            validated=self.validated,
+            is_video=context.media.media_type.is_video,
+            analysed_faces=len(faces),
+            candidate_frames=len(candidates),
         )
+        try:
+            artifacts = save_diagnostics(
+                runtime,
+                faces[top_index],
+                artifact_dir=context.artifact_dir,
+                job_id=context.job_id,
+            )
+        except (OSError, RuntimeError, cv2.error):
+            artifacts = []
+            warnings.append(
+                "Model scores are available, but diagnostic images could not be generated."
+            )
         frame_scores = [
             {
                 "frame_index": frame.frame_index if frame is not None else None,
@@ -132,12 +144,7 @@ class DeepfakeAnalyzer:
                 "frame_scores": frame_scores,
             },
             artifacts=artifacts,
-            warnings=_model_warnings(
-                validated=self.validated,
-                is_video=context.media.media_type.is_video,
-                analysed_faces=len(faces),
-                candidate_frames=len(candidates),
-            ),
+            warnings=warnings,
         )
 
     def _get_runtime(self) -> ModelRuntime:

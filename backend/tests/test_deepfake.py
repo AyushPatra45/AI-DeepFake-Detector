@@ -223,8 +223,9 @@ def test_video_analysis_scores_all_faces_and_preserves_frame_association(
     assert result.settings["checkpoint_sha256"] == runtime.checkpoint_sha256
 
 
+@pytest.mark.parametrize("diagnostics_fail", [False, True])
 def test_validated_checkpoint_enables_threshold_decision(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, diagnostics_fail: bool
 ) -> None:
     checkpoint = tmp_path / "model.pth"
     checkpoint.write_bytes(b"placeholder")
@@ -242,11 +243,18 @@ def test_validated_checkpoint_enables_threshold_decision(
     )
     monkeypatch.setattr("app.deepfake.adapter.cv2.imread", lambda *args, **kwargs: face)
     monkeypatch.setattr(FaceCropper, "crop_largest", lambda *args, **kwargs: face)
-    monkeypatch.setattr("app.deepfake.adapter.save_diagnostics", lambda *args, **kwargs: [])
+    def diagnostics(*args, **kwargs):
+        if diagnostics_fail:
+            raise OSError("Could not write diagnostic artifact")
+        return []
+
+    monkeypatch.setattr("app.deepfake.adapter.save_diagnostics", diagnostics)
 
     result = analyzer.analyse(context)
 
     assert result.findings["decision"] == "suspicious"
+    assert result.findings["deepfake_probability"] == 0.9
+    assert any("diagnostic images" in warning for warning in result.warnings) == diagnostics_fail
     assert result.settings["threshold_enabled"] is True
     assert result.settings["validation_status"] == "validated"
     assert all("unvalidated" not in warning for warning in result.warnings)

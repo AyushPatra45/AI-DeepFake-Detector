@@ -42,9 +42,10 @@ def process_job(
             ModuleResult(
                 module="platform_ingestion",
                 status=ModuleStatus.COMPLETED,
-                version="1.0",
+                version="1.1",
                 settings={
                     "frame_interval_seconds": settings.frame_interval_seconds,
+                    "video_sampling_policy": "fixed_interval_or_uniform_when_capped",
                     "max_sampled_frames": settings.max_sampled_frames,
                     "max_media_pixels": settings.max_media_pixels,
                     "max_video_duration_seconds": settings.max_video_duration_seconds,
