@@ -58,6 +58,8 @@ def write_pdf_report(job: JobView, destination: Path) -> Path:
     if job.result:
         line("Media", font="Helvetica-Bold", size=12, gap=18)
         media = job.result.media
+        line(f"Code version: {job.result.code_version}")
+        line(f"Analysed: {job.result.analysed_at.isoformat()}")
         line(f"Dimensions: {media.width} x {media.height}")
         if media.duration_seconds is not None:
             line(f"Duration: {media.duration_seconds:.3f} seconds")
@@ -68,6 +70,14 @@ def write_pdf_report(job: JobView, destination: Path) -> Path:
         line("Module findings", font="Helvetica-Bold", size=12, gap=18)
         for module in job.result.modules:
             line(f"{module.module}: {module.status.value}", font="Helvetica-Bold")
+            line(f"Version: {module.version}; duration: {module.duration_ms} ms")
+            if module.settings:
+                line(f"Settings: {json.dumps(module.settings, sort_keys=True)}")
+            if module.module == "deepfake_detection":
+                score = module.findings.get("deepfake_probability")
+                if score is not None:
+                    line(f"Face-manipulation model score: {score:.1%}", font="Helvetica-Bold")
+                    line("This score does not measure whole-media AI-generation probability.")
             for warning in module.warnings:
                 line(f"Warning: {warning}")
             if module.findings:

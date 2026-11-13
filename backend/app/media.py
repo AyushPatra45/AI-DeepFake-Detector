@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import ceil, isfinite
 from pathlib import Path
 
 import cv2
@@ -63,7 +64,7 @@ def sample_video(
     max_pixels: int | None = None,
     max_duration_seconds: float | None = None,
 ) -> InspectedMedia:
-    if interval_seconds <= 0:
+    if not isfinite(interval_seconds) or interval_seconds <= 0:
         raise ValueError("Frame interval must be greater than zero")
     if max_frames <= 0:
         raise ValueError("Maximum sampled frames must be greater than zero")
@@ -77,7 +78,7 @@ def sample_video(
         total_frames = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
         width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
         height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        if fps <= 0 or total_frames <= 0 or width <= 0 or height <= 0:
+        if not isfinite(fps) or fps <= 0 or total_frames <= 0 or width <= 0 or height <= 0:
             raise MediaDecodeError("Video metadata is incomplete or invalid")
 
         duration = total_frames / fps
@@ -89,16 +90,27 @@ def sample_video(
             )
         output_dir.mkdir(parents=True, exist_ok=True)
         samples: list[FrameFinding] = []
-        timestamp = 0.0
+        interval_frames = max(1.0, interval_seconds * fps)
+        requested = ceil(total_frames / interval_frames)
+        count = min(requested, max_frames)
+        capped = requested > max_frames
+        skipped = 0
 
-        while timestamp < duration and len(samples) < max_frames:
-            capture.set(cv2.CAP_PROP_POS_MSEC, timestamp * 1000)
+        for index in range(count):
+            frame_index = (
+                round(index * (total_frames - 1) / (count - 1))
+                if capped and count > 1
+                else min(round(index * interval_frames), total_frames - 1)
+            )
+            if not capture.set(cv2.CAP_PROP_POS_FRAMES, frame_index):
+                skipped += 1
+                continue
             ok, frame = capture.read()
             if not ok:
-                timestamp += interval_seconds
+                skipped += 1
                 continue
 
-            frame_index = min(round(timestamp * fps), total_frames - 1)
+            _check_pixel_limit(frame.shape[1], frame.shape[0], max_pixels)
             file_name = f"frame-{len(samples):04d}-{frame_index}.jpg"
             frame_path = output_dir / file_name
             if not cv2.imwrite(str(frame_path), frame, [cv2.IMWRITE_JPEG_QUALITY, 92]):
@@ -107,7 +119,7 @@ def sample_video(
             samples.append(
                 FrameFinding(
                     frame_index=frame_index,
-                    timestamp_seconds=round(timestamp, 3),
+                    timestamp_seconds=round(frame_index / fps, 3),
                     artifact=Artifact(
                         kind="sampled_frame",
                         path=f"/artifacts/{output_dir.name}/{file_name}",
@@ -115,12 +127,11 @@ def sample_video(
                     ),
                 )
             )
-            timestamp += interval_seconds
-
         warnings: list[str] = []
-        expected_samples = max(1, int(duration / interval_seconds) + 1)
-        if len(samples) >= max_frames and expected_samples > max_frames:
-            warnings.append(f"Sampling stopped at the configured limit of {max_frames} frames")
+        if capped:
+            warnings.append(f"Sampling limited to {count} frames across the video duration")
+        if skipped:
+            warnings.append(f"{skipped} selected frames could not be decoded")
         if not samples:
             raise MediaDecodeError("No frames could be sampled from the video")
 

@@ -113,7 +113,11 @@ def generate_y01_corpus(output_dir: Path, seed: int = DEFAULT_SEED) -> dict:
         cases.append(
             {
                 "id": case_id,
-                "file": path.relative_to(REPOSITORY_ROOT).as_posix(),
+                "file": (
+                    path.resolve().relative_to(REPOSITORY_ROOT).as_posix()
+                    if path.resolve().is_relative_to(REPOSITORY_ROOT)
+                    else path.resolve().as_posix()
+                ),
                 "category": category,
                 "seed": case_seed,
                 "payload_size": len(payload) if payload is not None else 0,

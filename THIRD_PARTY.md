@@ -3,7 +3,13 @@
 This file must be updated whenever code, model weights, datasets, icons, or other
 assets are added to the project.
 
-## Candidate deepfake reference
+## Interface icons
+
+- Lucide 0.468.0, https://lucide.dev, ISC licence.
+- Locally bundled distribution: `frontend/lucide.min.js`.
+- Retained licence: `frontend/LUCIDE_LICENSE`.
+
+## Deepfake reference
 
 - Project: `yyouretoast/deepfake-detection`
 - Source: https://github.com/yyouretoast/deepfake-detection

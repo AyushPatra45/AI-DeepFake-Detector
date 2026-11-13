@@ -5,26 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Deepfake and steganography forensic analysis workspace" />
     <title>AI-Powered Deepfake &amp; Steganography Forensics</title>
-    <link rel="stylesheet" href="/static/styles.css" />
+    <link rel="stylesheet" href="/static/styles.css?v=9" />
   </head>
   <body>
     <a class="skip-link" href="#workspace">Skip to workspace</a>
     <div class="app-shell">
       <aside class="sidebar">
         <a class="brand" href="/" aria-label="Forensics workspace home">
-          <span class="brand-mark" aria-hidden="true">DF</span>
-          <span>Forensics</span>
+          <span class="brand-mark" aria-hidden="true"><i data-lucide="scan-eye"></i></span>
+          <span>Forensics<span class="brand-subtitle">MEDIA INTELLIGENCE</span></span>
         </a>
         <nav aria-label="Workspace navigation">
           <button class="nav-item active" data-view="analysis" type="button"
-                  aria-label="New analysis" aria-controls="analysisView"
+                  title="New analysis" aria-label="New analysis" aria-controls="analysisView"
                   aria-pressed="true">
-            <span aria-hidden="true">＋</span><span>New analysis</span>
+            <span aria-hidden="true"><i data-lucide="scan-line"></i></span><span>New analysis</span>
           </button>
           <button class="nav-item" data-view="history" type="button"
-                  aria-label="Case history" aria-controls="historyView"
+                  title="Case history" aria-label="Case history" aria-controls="historyView"
                   aria-pressed="false">
-            <span aria-hidden="true">≡</span><span>Case history</span>
+            <span aria-hidden="true"><i data-lucide="folder-clock"></i></span><span>Case history</span>
           </button>
         </nav>
         <div class="sidebar-status" role="status" aria-live="polite" aria-atomic="true">
@@ -36,10 +36,10 @@
       <main id="workspace" tabindex="-1">
         <header class="topbar">
           <div>
-            <p class="eyebrow">Digital media laboratory</p>
+            <p class="eyebrow">Workspace / Media analysis</p>
             <h1>AI-Powered Deepfake &amp; Steganography Forensics</h1>
           </div>
-          <a class="icon-link" href="/docs" title="Open API documentation" aria-label="Open API documentation">API</a>
+          <a class="icon-link" href="/docs" title="Open API documentation" aria-label="Open API documentation"><i data-lucide="braces" aria-hidden="true"></i></a>
         </header>
 
         <section id="analysisView" class="view active" aria-labelledby="analysisHeading">
@@ -47,8 +47,8 @@
             <section class="upload-panel" aria-labelledby="analysisHeading">
               <div class="section-heading">
                 <div>
-                  <p class="eyebrow">New case</p>
-                  <h2 id="analysisHeading" tabindex="-1">Analyse media</h2>
+                  <p class="eyebrow">01 / Evidence intake</p>
+                  <h2 id="analysisHeading" tabindex="-1">New analysis</h2>
                 </div>
                 <span class="format-label">JPEG · PNG · MP4 · MOV</span>
               </div>
@@ -58,7 +58,9 @@
                   <input id="mediaFile" name="file" type="file"
                          accept="image/jpeg,image/png,video/mp4,video/quicktime"
                          aria-describedby="uploadRequirements" required />
-                  <span class="upload-symbol" aria-hidden="true">↑</span>
+                  <span class="upload-symbol" aria-hidden="true"><i data-lucide="upload"></i></span>
+                  <img class="file-preview" id="imagePreview" alt="Selected image preview" hidden />
+                  <video class="file-preview" id="videoPreview" muted playsinline preload="metadata" aria-label="Selected video preview" hidden></video>
                   <span class="drop-title" id="dropTitle">Choose image or video</span>
                   <span class="drop-meta" id="dropMeta">Maximum 500 MB</span>
                   <span class="sr-only" id="uploadRequirements">
@@ -66,7 +68,7 @@
                   </span>
                 </label>
                 <button class="primary-button" id="analyseButton" type="submit" disabled>
-                  Start forensic analysis
+                  <i data-lucide="scan-line" aria-hidden="true"></i><span id="analyseLabel">Start forensic analysis</span><i data-lucide="arrow-right" aria-hidden="true"></i>
                 </button>
               </form>
 
@@ -85,7 +87,7 @@
             </section>
 
             <aside class="integrity-panel" aria-label="Evidence handling">
-              <p class="eyebrow">Evidence controls</p>
+              <p class="eyebrow"><i data-lucide="shield-check" aria-hidden="true"></i> Evidence controls</p>
               <dl>
                 <div><dt>Identity</dt><dd>SHA-256</dd></div>
                 <div><dt>Execution</dt><dd>Local</dd></div>
@@ -98,30 +100,30 @@
           <section class="results" id="results" hidden aria-labelledby="resultHeading">
             <div class="result-header">
               <div>
-                <p class="eyebrow">Case result</p>
+                <p class="eyebrow">02 / Analysis results</p>
                 <h2 id="resultHeading" tabindex="-1">Forensic findings</h2>
                 <p class="case-file" id="caseFile"></p>
               </div>
               <div class="report-actions" id="reportActions">
                 <a class="secondary-button" id="jsonReport" href="#" download
-                   aria-label="Download JSON forensic report">JSON</a>
+                   aria-label="Download JSON forensic report"><i data-lucide="file-json" aria-hidden="true"></i> JSON</a>
                 <a class="secondary-button" id="pdfReport" href="#" download
-                   aria-label="Download PDF forensic report">PDF</a>
+                   aria-label="Download PDF forensic report"><i data-lucide="download" aria-hidden="true"></i> PDF</a>
               </div>
             </div>
 
             <div class="summary-strip">
               <div class="risk-summary">
-                <span class="score-label">Deepfake probability</span>
+                <span class="score-label" id="scoreLabel">Face-manipulation model score</span>
                 <strong id="riskScore">Unavailable</strong>
                 <span class="risk-badge neutral" id="riskDecision">Not evaluated</span>
                 <p class="risk-help" id="riskHelp">
-                  A model risk indicator, not proof that media is authentic or manipulated.
+                  Watermark, provenance, model and forensic signals are reported separately.
                 </p>
               </div>
               <dl class="evidence-summary">
                 <div><dt>Media</dt><dd id="mediaSummary">—</dd></div>
-                <div><dt>Frames analysed</dt><dd id="frameSummary">0</dd></div>
+                <div><dt>Faces analysed</dt><dd id="frameSummary">0</dd></div>
                 <div><dt>Supported LSB payload</dt><dd id="lsbSummary">Not detected</dd></div>
                 <div><dt>Status</dt><dd id="statusSummary">—</dd></div>
               </dl>
@@ -147,6 +149,20 @@
 
             <div class="tab-panel active" id="overviewPanel" role="tabpanel"
                  aria-labelledby="overviewTab" tabindex="0">
+              <section class="signal-breakdown" aria-labelledby="signalHeading">
+                <h3 id="signalHeading">Signal breakdown</h3>
+                <dl class="signal-list">
+                  <div><dt>Face model</dt><dd id="modelSignal">Not evaluated</dd></div>
+                  <div><dt>Watermark / provenance</dt><dd id="originSignal">Not evaluated</dd></div>
+                  <div><dt>Error level analysis</dt><dd id="elaSignal">Not evaluated</dd></div>
+                  <div><dt>LSB extraction</dt><dd id="lsbSignal">Not evaluated</dd></div>
+                </dl>
+              </section>
+              <details class="metadata-section">
+                <summary>File metadata</summary>
+                <dl id="metadataList" class="metadata-list"></dl>
+              </details>
+              <h3 class="module-heading">Analysis modules</h3>
               <div class="module-list" id="moduleList"></div>
               <div class="warning-list" id="warningList"></div>
             </div>
@@ -163,7 +179,7 @@
                     <tr>
                       <th scope="col">Frame</th>
                       <th scope="col">Timestamp</th>
-                      <th scope="col">Deepfake probability</th>
+                      <th scope="col">Face-manipulation score</th>
                       <th scope="col">Evidence</th>
                     </tr>
                   </thead>
@@ -176,7 +192,26 @@
         <section id="historyView" class="view" aria-labelledby="historyHeading" hidden>
           <div class="section-heading history-heading">
             <div><p class="eyebrow">Saved locally</p><h2 id="historyHeading" tabindex="-1">Case history</h2></div>
-            <button class="secondary-button" id="refreshHistory" type="button">Refresh</button>
+            <button class="secondary-button" id="refreshHistory" type="button"><i data-lucide="refresh-cw" aria-hidden="true"></i> Refresh</button>
+          </div>
+          <div class="history-tools" role="search" aria-label="Search case history">
+            <label class="history-search">
+              <i data-lucide="search" aria-hidden="true"></i>
+              <span class="sr-only">Search files or case IDs</span>
+              <input id="historySearch" type="search" placeholder="Search files or case IDs" />
+            </label>
+            <label class="history-filter">
+              <span class="sr-only">Filter by status</span>
+              <select id="historyStatus">
+                <option value="">All statuses</option>
+                <option value="completed">Completed</option>
+                <option value="partially_completed">Partially completed</option>
+                <option value="failed">Failed</option>
+                <option value="queued">Queued</option>
+                <option value="processing">Processing</option>
+              </select>
+            </label>
+            <span id="historyCount" class="history-count" role="status"></span>
           </div>
           <div class="table-wrap history-table">
             <table>
@@ -197,6 +232,7 @@
       </main>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
-    <script src="/static/app.js" defer></script>
+    <script src="/static/lucide.min.js" defer></script>
+    <script src="/static/app.js?v=9" defer></script>
   </body>
 </html>

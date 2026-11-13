@@ -1,5 +1,21 @@
 # Forensics Evaluation
 
+## Known-seed recovery
+
+The website's default scan still treats shuffled layouts as unsupported. For the
+project's shuffled RGB fixture, use the known seed and payload size to recover the
+bytes locally:
+
+```bash
+PYTHONPATH=backend python -m app.forensics.keyed_lsb image.png \
+  --seed 20261412 --payload-size 128 --output recovered.bin
+```
+
+This example uses the default evaluation fixture's parameters. Use the matching
+parameters for other images in this specific format. The output path must be new.
+The marker and terminator are format checks, not cryptographic integrity checks.
+This mode does not discover unknown keys or decrypt encrypted bytes.
+
 ## Scope
 
 This document records Ayana's Y-01 evaluation of the existing

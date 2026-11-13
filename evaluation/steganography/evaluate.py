@@ -146,7 +146,11 @@ def evaluate_manifest(manifest_path: Path) -> dict[str, Any]:
         "task": "Y-01",
         "production_implementation": "backend/app/forensics/lsb.py",
         "production_code_modified": False,
-        "manifest": manifest_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "manifest": (
+            manifest_path.resolve().relative_to(REPOSITORY_ROOT).as_posix()
+            if manifest_path.resolve().is_relative_to(REPOSITORY_ROOT)
+            else manifest_path.resolve().as_posix()
+        ),
         "summary": summary,
         "cases": cases,
     }

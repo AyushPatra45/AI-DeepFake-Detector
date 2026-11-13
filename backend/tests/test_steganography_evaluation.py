@@ -78,6 +78,17 @@ def test_manifest_records_every_control_parameter(
     } <= channel_orders
 
 
+def test_evaluate_corpus_outside_repository(tmp_path: Path, monkeypatch) -> None:
+    repository_root = tmp_path / "repository"
+    repository_root.mkdir()
+    monkeypatch.setattr(corpus, "REPOSITORY_ROOT", repository_root)
+    monkeypatch.setattr(evaluate, "REPOSITORY_ROOT", repository_root)
+    output = tmp_path / "external"
+    corpus.generate_y01_corpus(output)
+    result = evaluate.evaluate_manifest(output / "manifest.json")
+    assert len(result["cases"]) == 16
+
+
 def test_corpus_generation_is_reproducible(
     tmp_path: Path,
     monkeypatch,

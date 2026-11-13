@@ -1,4 +1,7 @@
-const state = { currentJob: null, pollTimer: null, toastTimer: null };
+const state = {
+  currentJob: null, pollTimer: null, toastTimer: null, previewUrl: null,
+  analysisBusy: false, historyJobs: null, historyError: false, historyLoading: false,
+};
 
 const MAX_UPLOAD_BYTES = 500 * 1024 * 1024;
 const SUPPORTED_MEDIA_TYPES = new Set([
@@ -36,11 +39,38 @@ function showToast(message) {
 }
 
 function resetFileSelection() {
+  resetPreview();
   const input = byId("mediaFile");
   input.value = "";
   byId("dropTitle").textContent = "Choose image or video";
   byId("dropMeta").textContent = "Maximum 500 MB";
   byId("analyseButton").disabled = true;
+}
+
+function resetPreview() {
+  if (state.previewUrl) URL.revokeObjectURL(state.previewUrl);
+  state.previewUrl = null;
+  for (const id of ["imagePreview", "videoPreview"]) {
+    const preview = byId(id);
+    preview.hidden = true;
+    preview.removeAttribute("src");
+  }
+  byId("videoPreview").load();
+  byId("dropZone").classList.remove("has-preview");
+}
+
+function previewFile(file) {
+  resetPreview();
+  state.previewUrl = URL.createObjectURL(file);
+  const isVideo = file.type.startsWith("video/") || /\.(mp4|mov)$/i.test(file.name);
+  const preview = byId(isVideo ? "videoPreview" : "imagePreview");
+  preview.src = state.previewUrl;
+  preview.hidden = false;
+  preview.onerror = () => {
+    preview.hidden = true;
+    byId("dropZone").classList.remove("has-preview");
+  };
+  byId("dropZone").classList.add("has-preview");
 }
 
 function validateFile(file) {
@@ -54,6 +84,7 @@ function validateFile(file) {
 }
 
 function selectFile(file, assignToInput = false) {
+  if (state.analysisBusy) return false;
   const input = byId("mediaFile");
   const validationError = validateFile(file);
   if (validationError) {
@@ -69,22 +100,30 @@ function selectFile(file, assignToInput = false) {
   }
   byId("dropTitle").textContent = file.name;
   byId("dropMeta").textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+  previewFile(file);
   byId("analyseButton").disabled = false;
   return true;
 }
 
 function setAnalysisBusy(busy) {
+  state.analysisBusy = busy;
   const form = byId("uploadForm");
   const button = byId("analyseButton");
   form.setAttribute("aria-busy", String(busy));
+  byId("mediaFile").disabled = busy;
   button.disabled = busy || !byId("mediaFile").files.length;
-  button.textContent = busy ? "Analysing media" : "Start forensic analysis";
+  byId("analyseLabel").textContent = busy ? "Analysing media" : "Start forensic analysis";
 }
 
 async function submitAnalysis(event) {
   event.preventDefault();
+  if (state.analysisBusy) return;
   const file = byId("mediaFile").files[0];
-  if (!selectFile(file)) return;
+  const validationError = validateFile(file);
+  if (validationError) {
+    showToast(validationError);
+    return;
+  }
 
   const form = new FormData();
   form.append("file", file);
@@ -122,7 +161,8 @@ async function pollJob(jobId) {
     setProgress(job.status.replaceAll("_", " "), job.id, progress[job.status] || 50);
     if (["completed", "partially_completed", "failed"].includes(job.status)) {
       setAnalysisBusy(false);
-      renderResult(job);
+      if (!byId("analysisView").hidden) renderResult(job);
+      else showToast(`Analysis ${job.status.replaceAll("_", " ")}. Open the case from history.`);
       loadHistory();
       return;
     }
@@ -136,18 +176,24 @@ async function pollJob(jobId) {
 
 function resetResult() {
   byId("caseFile").textContent = "";
+  byId("scoreLabel").textContent = "Face-manipulation model score";
   byId("riskScore").textContent = "Unavailable";
+  byId("riskScore").className = "";
   byId("riskDecision").textContent = "Not evaluated";
   byId("riskDecision").className = "risk-badge neutral";
-  byId("riskHelp").textContent = "A model risk indicator, not proof that media is authentic or manipulated.";
+  byId("riskHelp").textContent = "Watermark, provenance, model and forensic signals are reported separately.";
   byId("mediaSummary").textContent = "—";
   byId("frameSummary").textContent = "0";
   byId("lsbSummary").textContent = "Not detected";
   byId("statusSummary").textContent = "—";
+  for (const id of ["modelSignal", "originSignal", "elaSignal", "lsbSignal"]) {
+    byId(id).replaceChildren();
+  }
   byId("moduleList").replaceChildren();
   byId("warningList").replaceChildren();
   byId("artifactGrid").replaceChildren();
   byId("frameTable").replaceChildren();
+  byId("metadataList").replaceChildren();
   byId("reportActions").hidden = true;
   activateTab(byId("overviewTab"));
 }
@@ -162,8 +208,12 @@ function renderResult(job) {
   byId("statusSummary").textContent = job.status.replaceAll("_", " ");
 
   if (!result) {
-    byId("warningList").innerHTML = `<div class="warning">${escapeText(job.error || "Analysis failed")}</div>`;
-    byId("riskHelp").textContent = "No model result was produced. Review the failure message and try a supported file.";
+    const pending = ["queued", "processing"].includes(job.status);
+    const message = pending ? "Analysis is still running." : job.error || "Analysis failed.";
+    byId("warningList").innerHTML = `<div class="warning">${escapeText(message)}</div>`;
+    byId("riskHelp").textContent = pending
+      ? "Refresh case history to check for results."
+      : "No model result was produced. Review the failure message and try a supported file.";
     byId("resultHeading").focus();
     return;
   }
@@ -171,30 +221,134 @@ function renderResult(job) {
   byId("reportActions").hidden = false;
 
   const deepfake = result.modules.find((module) => module.module === "deepfake_detection");
+  const authenticity = result.modules.find((module) => module.module === "media_authenticity");
   const forensics = result.modules.find((module) => module.module === "image_forensics");
   const probability = deepfake?.findings?.deepfake_probability;
   const decision = deepfake?.findings?.decision;
-  byId("riskScore").textContent = probability == null ? "Unavailable" : formatPercent(probability);
+  const assessment = authenticity?.findings?.assessment;
+  const watermark = authenticity?.findings?.visible_watermark;
+  const score = byId("riskScore");
   const riskBadge = byId("riskDecision");
-  riskBadge.textContent = decision ? decision.replaceAll("_", " ") : "Not evaluated";
-  riskBadge.className = `risk-badge ${decision || "neutral"}`;
-  byId("riskHelp").textContent = probability == null
-    ? "The face-focused model was not evaluated. Other forensic findings may still be available."
-    : "This calibrated model score is a risk indicator, not proof that media is authentic or manipulated.";
-  byId("frameSummary").textContent = deepfake?.findings?.analysed_faces ?? result.frames.length;
-  byId("lsbSummary").textContent = forensics?.findings?.lsb?.supported_payload_detected
-    ? "Extracted safely"
-    : "Not detected";
+  if (authenticity?.status === "completed" && watermark?.candidate_detected) {
+    byId("scoreLabel").textContent = "AI-origin signal";
+    score.textContent = "Strong AI-origin evidence";
+    score.className = "assessment-text";
+    riskBadge.textContent = watermark?.candidate_detected ? "Visible watermark detected" : "Provenance marker detected";
+    riskBadge.className = "risk-badge strong_evidence";
+    byId("riskHelp").textContent = watermark?.candidate_detected
+      ? "A persistent generator-style watermark was found. Verify invisible SynthID separately for provider attribution."
+      : "File-level provenance markers were found. Signature validation is still required.";
+  } else if (authenticity?.status === "completed" && authenticity?.findings?.provenance?.ai_origin_claim_detected) {
+    score.textContent = probability == null ? "Unavailable" : formatPercent(probability);
+    riskBadge.textContent = "Unverified AI-origin claim";
+    riskBadge.className = "risk-badge evaluation_pending";
+    byId("riskHelp").textContent = "File text mentions AI generation, but its signature is unverified. The face-model score is a separate measurement, not proof of origin.";
+  } else if (assessment === "inconclusive" && probability != null) {
+    score.textContent = formatPercent(probability);
+    riskBadge.textContent = "Origin not confirmed";
+    riskBadge.className = "risk-badge evaluation_pending";
+    byId("riskHelp").textContent = "No known watermark or provenance marker was found. This unvalidated face-model score is not the probability that the whole image or video is AI-generated.";
+  } else if (assessment === "inconclusive") {
+    score.textContent = "Unavailable";
+    riskBadge.textContent = "Origin not confirmed";
+    riskBadge.className = "risk-badge evaluation_pending";
+    byId("riskHelp").textContent = "No known watermark or provenance marker was found, and no face-model score was produced. This does not prove the media is real.";
+  } else {
+    score.textContent = probability == null ? "Unavailable" : formatPercent(probability);
+    riskBadge.textContent = decision ? decision.replaceAll("_", " ") : "Not evaluated";
+    riskBadge.className = `risk-badge ${decision || "neutral"}`;
+    byId("riskHelp").textContent = "Authenticity analysis was unavailable; review individual module warnings.";
+  }
+  byId("frameSummary").textContent = deepfake?.findings?.analysed_faces ?? "Not evaluated";
+  const lsb = forensics?.findings?.lsb;
+  byId("lsbSummary").textContent = lsb
+    ? (lsb.supported_payload_detected ? "Extracted safely" : "Not detected")
+    : "Not evaluated";
   const media = result.media;
   byId("mediaSummary").textContent = media.duration_seconds == null
     ? `${media.width} × ${media.height}`
     : `${media.duration_seconds.toFixed(1)} s · ${media.width} × ${media.height}`;
 
+  renderSignals(deepfake, authenticity, forensics, media);
+  renderMetadata(forensics?.findings?.metadata);
   renderModules(result.modules);
   renderWarnings(result);
   renderArtifacts(result.modules);
   renderFrames(result.frames);
   byId("resultHeading").focus();
+}
+
+function renderMetadata(metadata) {
+  const container = byId("metadataList");
+  container.replaceChildren();
+  const rows = Object.entries(metadata || {}).flatMap(([key, value]) => {
+    if (value && typeof value === "object") {
+      return Object.entries(value).map(([tag, detail]) => [`${key} / ${tag}`, detail]);
+    }
+    return [[key, value]];
+  });
+  if (!rows.length) rows.push(["Metadata", "No metadata available for this case"]);
+  rows.forEach(([key, value]) => {
+    const row = document.createElement("div");
+    const term = document.createElement("dt");
+    const detail = document.createElement("dd");
+    term.textContent = key.replaceAll("_", " ");
+    detail.textContent = typeof value === "object" ? JSON.stringify(value) : String(value ?? "Unavailable");
+    row.append(term, detail);
+    container.append(row);
+  });
+}
+
+function setSignal(id, value, note) {
+  const valueElement = document.createElement("strong");
+  valueElement.textContent = value;
+  const noteElement = document.createElement("span");
+  noteElement.textContent = note;
+  byId(id).replaceChildren(valueElement, noteElement);
+}
+
+function renderSignals(deepfake, authenticity, forensics, media) {
+  const probability = deepfake?.findings?.deepfake_probability;
+  setSignal(
+    "modelSignal",
+    probability == null ? "No score" : formatPercent(probability),
+    "Unvalidated score for facial manipulation patterns, not whole-media AI probability."
+  );
+
+  const watermark = authenticity?.findings?.visible_watermark;
+  const provenance = authenticity?.findings?.provenance;
+  if (!authenticity || authenticity.status !== "completed") {
+    setSignal("originSignal", "Not evaluated", "Origin-marker analysis was unavailable.");
+  } else if (watermark?.candidate_detected) {
+    setSignal("originSignal", "Visible watermark candidate", "Strong AI-origin lead; confirm provider attribution separately.");
+  } else if (provenance?.ai_origin_claim_detected) {
+    setSignal("originSignal", "AI-origin claim found", "File claim is not signature-verified.");
+  } else {
+    setSignal("originSignal", "No known marker found", "Absence does not establish authenticity.");
+  }
+
+  const ela = forensics?.findings?.ela;
+  if (ela) {
+    setSignal(
+      "elaSignal",
+      `${Number(ela.mean_error).toFixed(2)} mean error · ${formatPercent(ela.highlighted_pixel_ratio)} highlighted`,
+      "JPEG recompression difference; inspect the heatmap. Neither measure is a fake probability."
+    );
+  } else {
+    setSignal("elaSignal", "Not applied", media.duration_seconds == null
+      ? "ELA was not available for this image."
+      : "Video compression changes this signal.");
+  }
+
+  const lsb = forensics?.findings?.lsb;
+  if (lsb?.supported_payload_detected) {
+    setSignal("lsbSignal", `${lsb.extracted_size_bytes} bytes extracted`, "Supported LSB layout; payload retained as inert bytes.");
+  } else {
+    setSignal("lsbSignal", lsb ? "No supported payload" : "Not evaluated",
+      lsb ? "Other steganography methods may still exist."
+        : media.duration_seconds == null ? "LSB analysis was unavailable for this image."
+          : "LSB extraction is for still images.");
+  }
 }
 
 function renderModules(modules) {
@@ -203,10 +357,30 @@ function renderModules(modules) {
   modules.forEach((module) => {
     const row = document.createElement("article");
     row.className = "module-row";
-    const findingText = Object.entries(module.findings || {})
-      .filter(([, value]) => ["string", "number", "boolean"].includes(typeof value))
-      .map(([key, value]) => `${key.replaceAll("_", " ")}: ${value}`)
-      .join(" · ") || `Version ${module.version}`;
+    let findingText = Object.entries(module.findings || {})
+      .filter(([key, value]) => !["assessment", "decision"].includes(key)
+        && ["string", "number", "boolean"].includes(typeof value))
+      .map(([key, value]) => {
+        const label = key === "deepfake_probability"
+          ? "face manipulation model score"
+          : key.replaceAll("_", " ");
+        return `${label}: ${key === "deepfake_probability" && value != null ? formatPercent(value) : value}`;
+      })
+      .join(" · ");
+    if (module.status !== "completed") {
+      findingText = (module.warnings || []).join(" ") || "No findings were produced.";
+    } else if (module.module === "media_authenticity") {
+      findingText = module.findings?.visible_watermark?.candidate_detected
+        ? "Visible watermark candidate detected"
+        : module.findings?.provenance?.ai_origin_claim_detected
+          ? "AI-origin claim found; signature not verified"
+          : "No known watermark or provenance marker found";
+    } else if (module.module === "image_forensics") {
+      findingText = module.findings?.ela
+        ? "ELA heatmap and LSB inspection available above"
+        : "Video metadata inspected; ELA and LSB not applied";
+    }
+    findingText ||= `Version ${module.version}`;
     row.innerHTML = `
       <div class="module-name">${escapeText(module.module.replaceAll("_", " "))}</div>
       <span class="module-state ${escapeText(module.status)}">${escapeText(module.status)}</span>
@@ -266,24 +440,57 @@ function renderFrames(frames) {
 
 async function loadHistory() {
   const table = byId("historyTable");
+  if (state.historyLoading) return;
+  state.historyLoading = true;
+  byId("refreshHistory").disabled = true;
   table.setAttribute("aria-busy", "true");
+  if (state.historyJobs == null) {
+    table.innerHTML = '<tr><td class="empty-cell" colspan="5">Loading cases…</td></tr>';
+  }
   try {
     const payload = await api("/api/v1/analyses?limit=100");
-    table.replaceChildren();
-    if (!payload.jobs.length) {
-      table.innerHTML = '<tr><td class="empty-cell" colspan="5">No analysis cases.</td></tr>';
-      return;
-    }
-    payload.jobs.forEach((job) => {
-      const row = document.createElement("tr");
-      const status = job.status.replaceAll("_", " ");
-      row.innerHTML = `<td>${escapeText(job.source_name)}</td><td>${new Date(job.created_at).toLocaleString()}</td><td>${escapeText(job.media_type)}</td><td>${escapeText(status)}</td><td><button class="case-button" type="button" data-job="${job.id}" aria-label="Open ${escapeText(job.source_name)} case, status ${escapeText(status)}">${job.id.slice(0, 8)}</button></td>`;
-      table.append(row);
-    });
-  } catch (error) {
-    showToast(error.message);
+    state.historyJobs = payload.jobs;
+    state.historyError = false;
+  } catch {
+    state.historyError = true;
   } finally {
+    state.historyLoading = false;
+    byId("refreshHistory").disabled = false;
     table.setAttribute("aria-busy", "false");
+    renderHistory();
+  }
+}
+
+function filterHistory(jobs, query, status) {
+  const needle = query.trim().toLowerCase();
+  return jobs.filter((job) =>
+    (!status || job.status === status) &&
+    (!needle || job.source_name.toLowerCase().includes(needle) || job.id.toLowerCase().includes(needle))
+  );
+}
+
+function renderHistory() {
+  if (state.historyJobs == null && !state.historyError) return;
+  const table = byId("historyTable");
+  const jobs = state.historyJobs ?? [];
+  const matches = filterHistory(jobs, byId("historySearch").value, byId("historyStatus").value);
+  table.replaceChildren();
+  byId("historyCount").textContent = state.historyError
+    ? "Could not refresh cases"
+    : `${matches.length} of ${jobs.length} cases`;
+  if (!matches.length) {
+    const message = state.historyError ? "Could not load cases. Select Refresh to retry."
+      : jobs.length ? "No matching cases." : "No analysis cases.";
+    table.innerHTML = `<tr><td class="empty-cell" colspan="5">${message}</td></tr>`;
+    return;
+  }
+  for (const job of matches) {
+    const row = document.createElement("tr");
+    const status = job.status.replaceAll("_", " ");
+    const tone = job.status === "completed" ? "completed"
+      : job.status === "failed" ? "failed" : job.status === "partially_completed" ? "partial" : "";
+    row.innerHTML = `<td>${escapeText(job.source_name)}</td><td>${new Date(job.created_at).toLocaleString()}</td><td>${escapeText(job.media_type)}</td><td><span class="module-state ${tone}">${escapeText(status)}</span></td><td><button class="case-button" type="button" data-job="${escapeText(job.id)}" aria-label="Open ${escapeText(job.source_name)} case, status ${escapeText(status)}">${escapeText(job.id.slice(0, 8))}</button></td>`;
+    table.append(row);
   }
 }
 
@@ -361,6 +568,8 @@ function initialiseEvents() {
     });
   });
   byId("refreshHistory").addEventListener("click", loadHistory);
+  byId("historySearch").addEventListener("input", renderHistory);
+  byId("historyStatus").addEventListener("change", renderHistory);
   byId("historyTable").addEventListener("click", async (event) => {
     const button = event.target.closest("[data-job]");
     if (!button) return;
@@ -373,6 +582,7 @@ function initialiseEvents() {
 }
 
 async function initialise() {
+  if (typeof lucide !== "undefined") lucide.createIcons();
   initialiseEvents();
   try {
     const health = await api("/health");
