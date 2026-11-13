@@ -53,7 +53,7 @@ capabilities of this prototype.
 
 ## Run and verify
 
-Local verification: 99 Python tests and seven Node frontend tests pass; Ruff
+Local verification: 100 Python tests and seven Node frontend tests pass; Ruff
 and whitespace checks pass. A fresh server accepted a synthetic no-face image,
 verified its source hash, completed the available forensic modules and exported JSON
 and PDF successfully. The no-face skip was confirmed in the desktop browser.
@@ -62,7 +62,9 @@ One existing Starlette/httpx deprecation warning remains in the test dependencie
 The local suite includes capped video sampling, preservation of scores after a
 diagnostic failure, and exact recovery for the documented known-seed LSB format.
 See `docs/FORENSICS_EVALUATION.md` for the offline recovery command. The default
-web scan does not recover arbitrary keyed layouts.
+web scan does not recover arbitrary keyed layouts. A fresh external-directory
+corpus run passed all 16 expectations; the recovered keyed fixture matched its
+recorded SHA-256.
 
 From the repository, with the environment activated:
 
