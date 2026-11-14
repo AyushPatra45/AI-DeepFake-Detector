@@ -44,6 +44,7 @@ assistance, verified in a live browser, and merged at commit `3e5276a`.
 | --- | --- | --- | --- | --- |
 | Project roadmap and team plan | Shared | Ayush | MERGED | Commit `c85722c` |
 | Platform backend foundation | Ayush | Ayush | MERGED | PR #1, commit `49b0b5f` |
+| A-04 origin evidence, video coverage, UI and reliability | Ayush | Ayush with Codex assistance | MERGED | PR #13, merge `20e2580`; GitHub CI passed |
 | Shared workboard and collision rules | Shared | Ayush | MERGED | Commits `81aa4d0` and `0f34555` |
 | Reproducible deepfake baseline evaluation pipeline | Palak | Palak | MERGED | PR #3; commit `9c285c5` and follow-up commits; 30 tests and Ruff passed |
 | Evaluator runner and failure-path tests | Palak | Palak, with Ayush review fix | MERGED | PR #5; Palak commit `e65ffbf`; review fix `6357a19`; 55 tests and Ruff passed |
