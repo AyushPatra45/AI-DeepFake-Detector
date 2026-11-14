@@ -34,11 +34,9 @@ assistance, verified in a live browser, and merged at commit `3e5276a`.
 
 | ID | Task | Owner | Status | Branch | Owned files or area | Updated | PR / evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| A-04 | Complete origin evidence and reliability fixes | Ayush with Codex assistance | PR_OPEN | `codex/forensics-completion-fixes` | Authenticity, orchestration, deepfake runtime access, frontend, reporting and regression tests; setup/status docs | 2026-09-24 | [PR #13](https://github.com/AyushPatra45/AI-DeepFake-Detector/pull/13); 96 Python tests, four frontend tests, Ruff and live upload/report smoke test passed; see `docs/COMPLETION_HANDOFF.md` |
-| P-03 | Run the baseline on an approved fixed dataset subset | Palak | CLAIMED | `codex/palak-p03-faceforensics-evaluation` | `docs/MODEL_EVALUATION.md`, `evaluation/deepfake/evaluate.py`, new `evaluation/deepfake/robustness.py`, new `evaluation/deepfake/video_metrics.py`, new `evaluation/deepfake/tests/test_p03_evaluation.py`; private media/manifests/results stay outside Git | 2026-09-20 | Official access received and Ayush approved the corrected 70-pair frozen evaluation protocol in [Issue #7](https://github.com/AyushPatra45/AI-DeepFake-Detector/issues/7); implementation not started |
-| Y-03H | Conduct five real usability sessions and enter anonymous observations | Team | BLOCKED | Create only after participants are available | Private generated study record under `evaluation/usability/generated/`; aggregate documentation only | 2026-09-20 | Engineering and validated study tooling are complete; five real participants are required and synthetic responses are prohibited |
-
-Only one large task per person may be `CLAIMED` or `IN_PROGRESS` at a time.
+| P-03 | Complete the frozen FaceForensics++ benchmark | Ayush | BLOCKED | `codex/final-validation-handoff` | Benchmark tooling and aggregate results only | 2026-11-14 | Palak prepared the frozen dataset and tooling; Ayush takes over execution. Needs authorized access to the private catalog and frames, or completed aggregate results. |
+| Y-03H | Conduct five real usability sessions | Ayush | BLOCKED | `codex/final-validation-handoff` | Private anonymous observations; aggregate documentation only | 2026-11-14 | Study tooling is ready; needs five real participants. |
+| A-05 | Verify a clean install on a second machine | Ayush | BLOCKED | `codex/final-validation-handoff` | Installation and smoke-test evidence | 2026-11-14 | Needs a second machine; GitHub runner verification is separate evidence. |
 
 ## Completed and merged work
 
@@ -46,6 +44,7 @@ Only one large task per person may be `CLAIMED` or `IN_PROGRESS` at a time.
 | --- | --- | --- | --- | --- |
 | Project roadmap and team plan | Shared | Ayush | MERGED | Commit `c85722c` |
 | Platform backend foundation | Ayush | Ayush | MERGED | PR #1, commit `49b0b5f` |
+| A-04 origin evidence, video coverage, UI and reliability | Ayush | Ayush with Codex assistance | MERGED | PR #13, merge `20e2580`; GitHub CI passed |
 | Shared workboard and collision rules | Shared | Ayush | MERGED | Commits `81aa4d0` and `0f34555` |
 | Reproducible deepfake baseline evaluation pipeline | Palak | Palak | MERGED | PR #3; commit `9c285c5` and follow-up commits; 30 tests and Ruff passed |
 | Evaluator runner and failure-path tests | Palak | Palak, with Ayush review fix | MERGED | PR #5; Palak commit `e65ffbf`; review fix `6357a19`; 55 tests and Ruff passed |

@@ -29,15 +29,25 @@ unchanged, so wider coverage is not a measured accuracy improvement. Optional
 diagnostic failures no longer discard model scores. The workspace now previews
 selected media, exposes metadata, and can search and filter its 100 most recent cases.
 
-1. Palak: finish the claimed P-03 evaluation on the approved private FaceForensics++
-   c23 corpus. Follow the corrected frozen 70-pair protocol in Issue #7; do not
-   re-split the official test set or tune thresholds on it. Publish reviewed
-   aggregate metrics, failure coverage, robustness and runtime results only.
-2. Team: recruit five real participants and run `evaluation/usability/study.py`
-   following `docs/USABILITY_EVALUATION.md`. Anonymous observed records are required.
-3. Ayush: review the resulting evidence, run the documented setup on a second machine,
-   then close release acceptance. Passing software tests does not complete scientific
-   evaluation or certify absence of all errors.
+Ayush owns the remaining execution. Palak and Ayana retain credit for the
+benchmark and forensic evaluation tooling they implemented.
+
+1. **P-03:** Obtain authorized access to the private frozen `catalog.csv` and its
+   corresponding frame directory, or obtain existing aggregate run outputs for
+   review. Follow [the approved protocol](MODEL_EVALUATION.md) without changing the
+   split or tuning on it. The local checkpoint already matches the pinned digest.
+   Keep private media, catalogs and per-sample results outside Git.
+2. **Y-03H:** Recruit five participants and record actual observations in the
+   ignored `evaluation/usability/generated/study.json`. Follow
+   [the study protocol](USABILITY_EVALUATION.md) and publish only aggregate results.
+3. **Second-machine check:** On a separate machine, clone the release branch into
+   a fresh directory, follow the README setup, and run the tests. Start the app,
+   upload the generated LSB control, and open its JSON and PDF reports. Record
+   OS, Python version, commit, test outcome, and upload/export outcome.
+   GitHub CI is separate evidence, not a second-machine app walkthrough.
+
+Handoff branch verification: 107 Python tests, seven frontend tests, and Ruff
+passed. The study record is blank; no benchmark or participant outcome is claimed.
 
 ## Detection boundary
 
